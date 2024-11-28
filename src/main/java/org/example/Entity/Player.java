@@ -19,6 +19,7 @@ public class Player extends Entity {
     int jumpDetrimention;
     boolean isStandingOnGround;
     boolean isJumping;
+    boolean hasJumpedOnce;
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
@@ -31,17 +32,18 @@ public class Player extends Entity {
         solidArea.height = 32;
         isStandingOnGround = false;
         isJumping = false;
+        hasJumpedOnce = false;
     }
 
     public void setDefaultValues() {
         x = 300;
-        y = 100;
-        speed = 4;
+        y = 50;
+        speed = 6;
         fallSpeed = 0;
-        maxFallSpeed = 7;
+        maxFallSpeed = 10;
         gravityAcceleration = 1;
         subjectToGravity = true;
-        direction = "down";
+        direction = "right";
         jumpSpeed = 35;
         jumpDetrimention= 5;
     }
@@ -53,17 +55,15 @@ public class Player extends Entity {
 
         if(isStandingOnGround){
             fallSpeed = 0;
-        }
 
-        if ((keyH.upPressed && isStandingOnGround) || isJumping) {
-            System.out.println("I jump");
-            isJumping = true;
+        }
+        startTheProcessOfJumping();
+
+        if (isJumping) {
             subjectToGravity = false;
-            keyH.upPressed = false;
-            direction = "up";
+            manageLeftAndRightMovementWhenJumping();
             y -= jumpSpeed;
             jumpSpeed -= jumpDetrimention;
-            System.out.println(keyH.upReleased);
             if(jumpSpeed == 0){
                 subjectToGravity = true;
                 isJumping = false;
@@ -86,24 +86,11 @@ public class Player extends Entity {
                 fallSpeed = maxFallSpeed;
             }
          }
-        spriteCounter++;
-        if(spriteCounter > 10){
-            if(spriteNum == 1) spriteNum = 2;
-            else if(spriteNum == 2)spriteNum = 1;
-            spriteCounter = 0;
-        }
+        manageSpriteAnimation();
     }
     public void draw (Graphics2D g2){
         BufferedImage image = null;
         switch (direction){
-            case "up":
-                if(spriteNum == 1) image = up1;
-                if(spriteNum == 2) image = up2;
-                break;
-            case "down":
-                if(spriteNum == 1) image = down1;
-                if(spriteNum == 2) image = down2;
-                break;
             case "left":
                 if(spriteNum == 1) image = left1;
                 if(spriteNum == 2) image = left2;
@@ -131,4 +118,30 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+
+    public void manageLeftAndRightMovementWhenJumping(){
+            if(keyH.rightPressed) x += speed;
+            else if(keyH.leftPressed) x -= speed;
+    }
+
+    public void manageSpriteAnimation(){
+        spriteCounter++;
+        if(spriteCounter > 10){
+            if(spriteNum == 1) spriteNum = 2;
+            else if(spriteNum == 2)spriteNum = 1;
+            spriteCounter = 0;
+        }
+    }
+
+    public void startTheProcessOfJumping(){
+        if(!hasJumpedOnce && keyH.upPressed && isStandingOnGround){
+            isJumping = true; hasJumpedOnce = true;
+        }
+        else if(hasJumpedOnce && keyH.upReleased && keyH.upPressed && isStandingOnGround){
+            isJumping = true;
+            keyH.upPressed = false;
+            keyH.upReleased = false;
+        }
+    }
+
 }

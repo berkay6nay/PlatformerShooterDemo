@@ -20,19 +20,13 @@ public class Player extends Entity {
     boolean isStandingOnGround;
     boolean isJumping;
     boolean hasJumpedOnce;
+    boolean horizontalCollision;
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
         setDefaultValues();
         getPlayerImage();
-        solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
-        solidArea.width = 32;
-        solidArea.height = 32;
-        isStandingOnGround = false;
-        isJumping = false;
-        hasJumpedOnce = false;
+
     }
 
     public void setDefaultValues() {
@@ -44,49 +38,74 @@ public class Player extends Entity {
         gravityAcceleration = 1;
         subjectToGravity = true;
         direction = "right";
-        jumpSpeed = 35;
+        jumpSpeed = 30;
         jumpDetrimention= 5;
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
+        isStandingOnGround = false;
+        isJumping = false;
+        hasJumpedOnce = false;
+        horizontalCollision = false;
     }
 
     public void update() {
 
-        subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
-        isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
+        boolean theAbyss = checkIfPlayerHasReachedTheAbyss();
 
-        if(isStandingOnGround){
-            fallSpeed = 0;
+        if(!theAbyss){
+            System.out.println(this.x +" " +  this.y);
+            subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
+            isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
+            horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
+            if(isStandingOnGround){
+                fallSpeed = 0;
 
-        }
-        startTheProcessOfJumping();
+            }
+            startTheProcessOfJumping();
 
-        if (isJumping) {
-            subjectToGravity = false;
-            manageLeftAndRightMovementWhenJumping();
-            y -= jumpSpeed;
-            jumpSpeed -= jumpDetrimention;
-            if(jumpSpeed == 0){
-                subjectToGravity = true;
-                isJumping = false;
-                jumpSpeed = 35;
+            if (isJumping) {
+                subjectToGravity = false;
+                manageLeftAndRightMovement();
+                y -= jumpSpeed;
+                jumpSpeed -= jumpDetrimention;
+                if(jumpSpeed == 0){
+                    subjectToGravity = true;
+                    isJumping = false;
+                    jumpSpeed = 30;
+                }
+            }
+            else if (keyH.rightPressed) {
+                direction = "right";
+            } else if (keyH.leftPressed) {
+                direction = "left";
+            }
+            if (subjectToGravity) {
+                y += fallSpeed;
+                if(fallSpeed <= maxFallSpeed){
+                    fallSpeed += gravityAcceleration;
+
+                } else {
+                    fallSpeed = maxFallSpeed;
+                }
+            }
+
+            if(!isStandingOnGround && !horizontalCollision){
+                manageLeftAndRightMovement();
+            } else if (isStandingOnGround) {
+                manageLeftAndRightMovement();
             }
         }
-         else if (keyH.rightPressed) {
-            direction = "right";
-            x += speed;
-        } else if (keyH.leftPressed) {
-            direction = "left";
-            x -= speed;
+        else{
+            System.out.println("fallen into the abyss");
+            this.x = 500;
+            this.y  = 0;
         }
-         if (subjectToGravity) {
-            y += fallSpeed;
-            if(fallSpeed <= maxFallSpeed){
-                fallSpeed += gravityAcceleration;
 
-            } else {
-                fallSpeed = maxFallSpeed;
-            }
-         }
         manageSpriteAnimation();
+
     }
     public void draw (Graphics2D g2){
         BufferedImage image = null;
@@ -119,7 +138,7 @@ public class Player extends Entity {
         }
     }
 
-    public void manageLeftAndRightMovementWhenJumping(){
+    public void manageLeftAndRightMovement(){
             if(keyH.rightPressed) x += speed;
             else if(keyH.leftPressed) x -= speed;
     }
@@ -142,6 +161,9 @@ public class Player extends Entity {
             keyH.upPressed = false;
             keyH.upReleased = false;
         }
+    }
+    public boolean checkIfPlayerHasReachedTheAbyss(){
+        return this.y + this.gp.tileSize >= this.gp.screenHeight;
     }
 
 }

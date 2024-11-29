@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Entity.Gun;
 import org.example.Entity.Player;
 import org.example.Tiles.TileManager;
 
@@ -23,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     Player player = new Player(this, keyH);
     TileManager tileManager = new TileManager(this);
+    Gun gun = new Gun(player.direction,this, player);
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth , screenHeight));
@@ -64,12 +66,14 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void update(){
         player.update();
+        gun.update();
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
         player.draw(g2);
+        gun.draw(g2);
         g2.dispose();
     }
 }

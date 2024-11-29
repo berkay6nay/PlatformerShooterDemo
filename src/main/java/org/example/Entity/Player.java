@@ -104,7 +104,11 @@ public class Player extends Entity {
             this.y  = 0;
         }
 
-        manageSpriteAnimation();
+        if(keyH.playerMovingHorizontally){
+            manageSpriteAnimation();
+        }
+
+
 
     }
     public void draw (Graphics2D g2){
@@ -119,7 +123,7 @@ public class Player extends Entity {
                 if(spriteNum == 2) image = right2;
                 break;
         }
-        g2.drawImage(image , x,y,gp.tileSize , gp.tileSize, null);
+        g2.drawImage(image , x,y,gp.tileSize , gp.tileSize , null);
     }
     public void getPlayerImage(){
         try{

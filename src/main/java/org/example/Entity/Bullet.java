@@ -22,7 +22,7 @@ public class Bullet {
         force = 30;
         bulletType = gun.type + "Bullet";
         gp = gun.gp;
-        speed = 5;
+        speed = 8;
         width = 6;
         height = 2;
         loadImage();

@@ -13,14 +13,6 @@ public class BulletManager {
     }
 
     public static void update(GamePanel gp){
-        if(gp.bullets.size() == 50){
-            for(Bullet bullet : gp.bullets){
-                if(bullet.x > gp.screenWidth || bullet.x - bullet.width < 0 ){
-                    System.out.println("Some bullets are being cleaned");
-                    gp.bullets.remove(bullet);
-                }
-            }
-        }
 
         for(Bullet bullet : gp.bullets){
             switch (bullet.direction){

@@ -9,8 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Player extends Entity {
-    GamePanel gp;
-    KeyHandler keyH;
+    public GamePanel gp;
+    public KeyHandler keyH;
     boolean subjectToGravity;
     int fallSpeed;
     int maxFallSpeed;
@@ -21,12 +21,13 @@ public class Player extends Entity {
     boolean isJumping;
     boolean hasJumpedOnce;
     boolean horizontalCollision;
-    public Player(GamePanel gp, KeyHandler keyH) {
+    public Gun gun;
+    public Player(GamePanel gp, KeyHandler keyH , Gun gun) {
         this.gp = gp;
         this.keyH = keyH;
         setDefaultValues();
         getPlayerImage();
-
+        this.gun = gun;
     }
 
     public void setDefaultValues() {
@@ -38,7 +39,7 @@ public class Player extends Entity {
         gravityAcceleration = 1;
         subjectToGravity = true;
         direction = "right";
-        jumpSpeed = 30;
+        jumpSpeed = 20;
         jumpDetrimention= 5;
         solidArea = new Rectangle();
         solidArea.x = 8;
@@ -56,14 +57,13 @@ public class Player extends Entity {
         boolean theAbyss = checkIfPlayerHasReachedTheAbyss();
 
         if(!theAbyss){
-            System.out.println(this.x +" " +  this.y);
             subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
             isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
             if(isStandingOnGround){
                 fallSpeed = 0;
-
             }
+
             startTheProcessOfJumping();
 
             if (isJumping) {
@@ -99,7 +99,7 @@ public class Player extends Entity {
             }
         }
         else{
-            System.out.println("fallen into the abyss");
+            System.out.println("It is a dreadful thing to fall into the hands of the living god.");
             this.x = 500;
             this.y  = 0;
         }

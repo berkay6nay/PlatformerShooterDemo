@@ -1,8 +1,6 @@
 package org.example;
 
-import org.example.Entity.Bullet;
-import org.example.Entity.Gun;
-import org.example.Entity.Player;
+import org.example.Entity.*;
 import org.example.Tiles.TileManager;
 
 import javax.swing.*;
@@ -26,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler keyH = new KeyHandler();
     BulletKeyHandler bulletKeyHandler = new BulletKeyHandler();
-    Gun gun = new Gun(this , bulletKeyHandler);
+    GunDefault gun = new GunDefault(this ,bulletKeyHandler);
     Player player = new Player(this, keyH , gun);
     TileManager tileManager = new TileManager(this);
 
@@ -72,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void update(){
         player.update();
-        player.gun.update(player.direction , player.x , player.y);
+        player.gun.update(player);
         BulletManager.update(this);
 
     }

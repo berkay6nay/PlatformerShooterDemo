@@ -45,18 +45,24 @@ public class CollisionChecker {
     public boolean checkCollisionHorizontally(Player entity){
         calculateCollisionValues(entity);
         int tileNum1 , tileNum2;
-        if(entity.direction.equals("left")){
-            entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
-            tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
-            tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
-            return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
-        }
-        else if(entity.direction.equals("right")){
-            entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
-            tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
-            tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
-            return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
-        }
+            if(entity.direction.equals("left")){
+                entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
+                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
+                tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+                return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
+            }
+            else if(entity.direction.equals("right")){
+                entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
+                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
+                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+                return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
+            }
         return false;
     }
+
+    public boolean isInsideTheBordersOfMap(Player player){
+        if(player.direction.equals("right")) return player.x + player.gp.tileSize + player.speed < player.gp.screenWidth;
+        else return player.x + player.speed > 0;
+    }
+
 }

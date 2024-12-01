@@ -17,7 +17,7 @@ public class GunDefault extends Gun{
         this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 5;
-        this.shootingInterval = 100000000;
+        this.shootingInterval = 200000000;
         getGunImages();
     }
 
@@ -58,7 +58,6 @@ public class GunDefault extends Gun{
     @Override
     public void update(Player player){
         gunDirection = player.direction;
-
         switch (gunDirection){
             case "right":
                 gunX = player.x + gunXDifferenceWhenFacingRight;
@@ -76,5 +75,6 @@ public class GunDefault extends Gun{
     public DefaultBullet generateBullet(){
         return new DefaultBullet(this);
     }
+
 
 }

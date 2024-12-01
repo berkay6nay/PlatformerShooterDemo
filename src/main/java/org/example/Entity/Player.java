@@ -21,6 +21,7 @@ public class Player extends Entity {
     boolean isJumping;
     boolean hasJumpedOnce;
     boolean horizontalCollision;
+    boolean isInsideTheBorders;
     public Gun gun;
     public Player(GamePanel gp, KeyHandler keyH , Gun gun) {
         this.gp = gp;
@@ -33,7 +34,7 @@ public class Player extends Entity {
     public void setDefaultValues() {
         x = 300;
         y = 50;
-        speed = 6;
+        speed = 5;
         fallSpeed = 0;
         maxFallSpeed = 10;
         gravityAcceleration = 1;
@@ -60,6 +61,8 @@ public class Player extends Entity {
             subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
             isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
+            isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
+
             if(isStandingOnGround){
                 fallSpeed = 0;
             }
@@ -92,7 +95,7 @@ public class Player extends Entity {
                 }
             }
 
-            if(!isStandingOnGround && !horizontalCollision){
+            if(!isStandingOnGround && !horizontalCollision && isInsideTheBorders){
                 manageLeftAndRightMovement();
             } else if (isStandingOnGround) {
                 manageLeftAndRightMovement();

@@ -1,7 +1,6 @@
 package org.example.Entity;
 import org.example.BulletKeyHandler;
 import org.example.GamePanel;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -20,8 +19,6 @@ public abstract class Gun {
     public int gunHeight = 24;
     public int gunYDifference;
     public double shootingInterval;
-
-
 
     public void update(Player player){
 
@@ -58,4 +55,5 @@ public abstract class Gun {
             lastFiringTime = now;
         }
     }
+
 }

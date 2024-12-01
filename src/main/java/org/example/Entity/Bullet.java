@@ -1,8 +1,6 @@
 package org.example.Entity;
 import org.example.GamePanel;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 public abstract class Bullet {
 
@@ -16,8 +14,14 @@ public abstract class Bullet {
     public int height;
 
     public Bullet(Gun gun){
-        x = gun.gunX;
-        y = gun.gunY;
+
+        if(gun.gunDirection.equals("right")){
+            x = gun.gunX + gun.gunWidth;
+        }
+        else{
+            x = gun.gunX;
+        }
+        y = gun.gunY + gun.gunHeight / 2;
         direction = gun.gunDirection;
         gp = gun.gp;
         width = 6;

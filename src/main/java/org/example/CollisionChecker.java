@@ -1,9 +1,9 @@
 package org.example;
+import org.example.Entity.Drop;
 import org.example.Entity.Player;
 
 public class CollisionChecker {
     public GamePanel gp;
-
     public int entityLeftWorldX;
     public int entityRightWorldX;
     public int entityTopWorldY;
@@ -65,4 +65,20 @@ public class CollisionChecker {
         else return player.x + player.speed > 0;
     }
 
+    public boolean checkIfDropSubjectToGravity(Drop drop){
+            int tileNum1 , tileNum2;
+            entityLeftCol = drop.x / gp.tileSize;
+            entityRightCol = (drop.x + drop.width) / gp.tileSize;
+            entityBottomRow = (drop.y + drop.height - 1) / gp.tileSize;
+
+            tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
+            tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
+
+        return !(gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision);
+    }
+
+    public boolean checkCollisionBetweenPlayerAndDrop(Player player , Drop drop){
+        return player.x + player.solidArea.x < drop.x + drop.width && player.x + player.solidArea.x + player.solidArea.width > drop.x
+                && player.y + player.solidArea.y < drop.y + drop.height && player.y + player.solidArea.y + player.solidArea.height > drop.y;
+    }
 }

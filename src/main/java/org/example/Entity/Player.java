@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Player extends Entity {
     public GamePanel gp;
@@ -62,6 +63,8 @@ public class Player extends Entity {
             isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
             isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
+
+            managePickingUpGunFromGround();
 
             if(isStandingOnGround){
                 fallSpeed = 0;
@@ -169,6 +172,27 @@ public class Player extends Entity {
     }
     public boolean checkIfPlayerHasReachedTheAbyss(){
         return this.y + this.gp.tileSize >= this.gp.screenHeight;
+    }
+
+    public void managePickingUpGunFromGround(){
+        ArrayList<Drop> toRemove = new ArrayList<>();
+        for(Drop drop : gp.dropManager.drops){
+            boolean collidesWithDrop = gp.collisionChecker.checkCollisionBetweenPlayerAndDrop(this, drop);
+            if(collidesWithDrop){
+                switch (drop.dropType){
+                    case "default":
+                        GunDefault newGun = new GunDefault(gp,gp.bulletKeyHandler);
+                        this.gun = newGun;
+                        break;
+                    case "gun02" :
+                        Gun02 newGun02 = new Gun02(gp , gp.bulletKeyHandler);
+                        this.gun = newGun02;
+                        break;
+                }
+                toRemove.add(drop);
+            }
+        }
+        gp.dropManager.drops.removeAll(toRemove);
     }
 
 }

@@ -23,10 +23,11 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     KeyHandler keyH = new KeyHandler();
-    BulletKeyHandler bulletKeyHandler = new BulletKeyHandler();
+    public BulletKeyHandler bulletKeyHandler = new BulletKeyHandler();
     Gun02 gun = new Gun02(this ,bulletKeyHandler);
     Player player = new Player(this, keyH , gun);
     TileManager tileManager = new TileManager(this);
+    public DropManager dropManager = new DropManager(this);
 
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public GamePanel(){
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
         player.update();
         player.gun.update(player);
         BulletManager.update(this);
+        dropManager.update();
 
     }
     public void paintComponent(Graphics g){
@@ -80,6 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
         tileManager.draw(g2);
         player.draw(g2);
         player.gun.draw(g2 , player.keyH.playerMovingHorizontally);
+        dropManager.draw(g2);
         BulletManager.draw(g2 , this);
         g2.dispose();
     }

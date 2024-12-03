@@ -24,8 +24,8 @@ public abstract class Bullet {
         y = gun.gunY + gun.gunHeight / 2;
         direction = gun.gunDirection;
         gp = gun.gp;
-        width = 6;
-        height = 2;
+        width = 8;
+        height = 3;
     }
 
     public void loadImage() {

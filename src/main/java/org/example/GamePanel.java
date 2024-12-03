@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler keyH = new KeyHandler();
     public BulletKeyHandler bulletKeyHandler = new BulletKeyHandler();
-    Gun02 gun = new Gun02(this ,bulletKeyHandler);
+    Gun04 gun = new Gun04(this ,bulletKeyHandler);
     Player player = new Player(this, keyH , gun);
     TileManager tileManager = new TileManager(this);
     public DropManager dropManager = new DropManager(this);

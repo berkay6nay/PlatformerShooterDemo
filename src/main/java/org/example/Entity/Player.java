@@ -181,12 +181,16 @@ public class Player extends Entity {
             if(collidesWithDrop){
                 switch (drop.dropType){
                     case "default":
-                        GunDefault newGun = new GunDefault(gp,gp.bulletKeyHandler);
-                        this.gun = newGun;
+                        this.gun = new GunDefault(gp,gp.bulletKeyHandler);
                         break;
                     case "gun02" :
-                        Gun02 newGun02 = new Gun02(gp , gp.bulletKeyHandler);
-                        this.gun = newGun02;
+                        this.gun = new Gun02(gp , gp.bulletKeyHandler);
+                        break;
+                    case "gun03" :
+                        this.gun = new Gun03(gp , gp.bulletKeyHandler);
+                        break;
+                    case "gun04" :
+                        this.gun = new Gun04(gp , gp.bulletKeyHandler);
                         break;
                 }
                 toRemove.add(drop);
@@ -194,5 +198,4 @@ public class Player extends Entity {
         }
         gp.dropManager.drops.removeAll(toRemove);
     }
-
 }

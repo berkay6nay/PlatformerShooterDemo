@@ -10,7 +10,7 @@ import java.util.Random;
 public class DropManager {
     ArrayList<String> dropTypes;
     GamePanel gp;
-    BufferedImage imageDefaultGun , imageGun02;
+    BufferedImage imageDefaultGun , imageGun02 , imageGun03 , imageGun04;
     double lastDropTime;
     public ArrayList<Drop> drops;
     Integer width;
@@ -45,6 +45,14 @@ public class DropManager {
                     Drop drop1 = new Drop(gp , randomX , randomType , imageGun02 , width , height);
                     drops.add(drop1);
                     break;
+                case "gun03":
+                    Drop drop2 = new Drop(gp , randomX , randomType , imageGun03 , width , height);
+                    drops.add(drop2);
+                    break;
+                case "gun04":
+                    Drop drop3 = new Drop(gp , randomX , randomType , imageGun04 , width , height);
+                    drops.add(drop3);
+                    break;
             }
             lastDropTime = now;
         }
@@ -54,6 +62,8 @@ public class DropManager {
         try{
             imageDefaultGun = ImageIO.read(new File("res/Drops/gun_default_drop.png"));
             imageGun02 = ImageIO.read(new File("res/Drops/gun_02_drop.png"));
+            imageGun03 = ImageIO.read(new File("res/Drops/gun_03_drop.png"));
+            imageGun04 = ImageIO.read(new File("res/Drops/gun_04_drop.png"));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -80,6 +90,8 @@ public class DropManager {
     public void loadDropTypes(){
         dropTypes.add("default");
         dropTypes.add("gun02");
+        dropTypes.add("gun03");
+        dropTypes.add("gun04");
     }
 
     public double checkIfCertainAmountOfTimeHasPassedToGenerateDrop(Double now){

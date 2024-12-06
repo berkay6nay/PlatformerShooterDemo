@@ -25,6 +25,10 @@ public class Player extends Entity {
     boolean isInsideTheBorders;
     boolean isFalling;
     public Gun gun;
+    int fallingStartPixel;
+    boolean hasFallenOnce;
+    double lastSpawnTime;
+
     public Player(GamePanel gp, KeyHandler keyH , Gun gun) {
         this.gp = gp;
         this.keyH = keyH;
@@ -54,6 +58,7 @@ public class Player extends Entity {
         hasJumpedOnce = false;
         horizontalCollision = false;
         isFalling = false;
+        hasFallenOnce = false;
     }
 
     public void update() {
@@ -61,23 +66,25 @@ public class Player extends Entity {
         boolean theAbyss = checkIfPlayerHasReachedTheAbyss();
 
         if(!theAbyss){
+            isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
+
+            isFalling = (keyH.downPressed || keyH.downReleased) && isStandingOnGround;
+
+
+            if(isStandingOnGround & !isFalling) fallingStartPixel =  y + gp.tileSize;
+
             subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
 
-            isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
             isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
 
-            isFalling = keyH.downPressed && isStandingOnGround;
-
             managePickingUpGunFromGround();
 
-            if(isStandingOnGround){
+            if(isStandingOnGround & !isFalling){
                 fallSpeed = 0;
             }
 
             startTheProcessOfJumping();
-
-
 
             if (isJumping) {
                 subjectToGravity = false;
@@ -91,18 +98,34 @@ public class Player extends Entity {
                 }
             }
 
-
-
             if(isStandingOnGround || (!horizontalCollision && isInsideTheBorders)){
                 manageLeftAndRightMovement();
             }
-            manageFallWhenSubjectToGravity(subjectToGravity);
+            manageFallWhenSubjectToGravity(subjectToGravity , isFalling);
+
+            if(isFalling){
+                if(y + gp.tileSize  - fallingStartPixel >= 50){
+                    isFalling = false;
+                    keyH.downReleased = false;
+
+                    hasFallenOnce = true;
+                }
+            }
         }
 
         else{
             System.out.println("It is a dreadful thing to fall into the hands of the living god.");
-            this.x = 500;
-            this.y  = 0;
+
+            if(y >= 3000){
+                x = 360;
+                y = 0;
+            }
+            else{
+                this.y  += 50;
+            }
+
+
+
         }
 
         if(keyH.playerMovingHorizontally){
@@ -199,8 +222,8 @@ public class Player extends Entity {
         }
         gp.dropManager.drops.removeAll(toRemove);
     }
-    public void manageFallWhenSubjectToGravity(boolean subjectToGravity){
-        if (subjectToGravity) {
+    public void manageFallWhenSubjectToGravity(boolean subjectToGravity , boolean isFalling){
+        if (subjectToGravity || isFalling) {
             y += fallSpeed;
             if(fallSpeed <= maxFallSpeed){
                 fallSpeed += gravityAcceleration;
@@ -209,6 +232,13 @@ public class Player extends Entity {
                 fallSpeed = maxFallSpeed;
             }
         }
+    }
+    public double checkIfTime(Double now){
+        if(lastSpawnTime == 0){
+            lastSpawnTime = now;
+            return 0;
+        }
+        return now - lastSpawnTime;
     }
 
 }

@@ -27,7 +27,7 @@ public class Player extends Entity {
     public Gun gun;
     int fallingStartPixel;
     boolean hasFallenOnce;
-    double lastSpawnTime;
+    int lives;
 
     public Player(GamePanel gp, KeyHandler keyH , Gun gun) {
         this.gp = gp;
@@ -59,6 +59,7 @@ public class Player extends Entity {
         horizontalCollision = false;
         isFalling = false;
         hasFallenOnce = false;
+        lives = 50;
     }
 
     public void update() {
@@ -116,6 +117,8 @@ public class Player extends Entity {
         else{
             System.out.println("It is a dreadful thing to fall into the hands of the living god.");
 
+            lives -= 1;
+
             if(y >= 3000){
                 x = 360;
                 y = 0;
@@ -123,16 +126,17 @@ public class Player extends Entity {
             else{
                 this.y  += 50;
             }
+        }
 
-
-
+        if(gun.currentBulletNumber == 0){
+            this.gun = new GunDefault(gp , gp.bulletKeyHandler);
         }
 
         if(keyH.playerMovingHorizontally){
             manageSpriteAnimation();
         }
-
     }
+
     public void draw (Graphics2D g2){
         BufferedImage image = null;
         switch (direction){
@@ -147,6 +151,7 @@ public class Player extends Entity {
         }
         g2.drawImage(image , x,y,gp.tileSize , gp.tileSize , null);
     }
+
     public void getPlayerImage(){
         try{
             up1 = ImageIO.read(new File("res/Player/boy_up_1.png"));
@@ -222,6 +227,7 @@ public class Player extends Entity {
         }
         gp.dropManager.drops.removeAll(toRemove);
     }
+
     public void manageFallWhenSubjectToGravity(boolean subjectToGravity , boolean isFalling){
         if (subjectToGravity || isFalling) {
             y += fallSpeed;
@@ -232,13 +238,6 @@ public class Player extends Entity {
                 fallSpeed = maxFallSpeed;
             }
         }
-    }
-    public double checkIfTime(Double now){
-        if(lastSpawnTime == 0){
-            lastSpawnTime = now;
-            return 0;
-        }
-        return now - lastSpawnTime;
     }
 
 }

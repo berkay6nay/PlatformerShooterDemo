@@ -4,8 +4,6 @@ import org.example.BulletKeyHandler;
 import org.example.GamePanel;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Gun02 extends Gun{
@@ -19,6 +17,8 @@ public class Gun02 extends Gun{
         this.gunYDifference = gp.tileSize/4 + 10;
         this.shootingInterval = 300000000;
         this.gunHeight = 17;
+        this.defaultBulletNumber = 45;
+        this.currentBulletNumber = defaultBulletNumber;
         getGunImages();
 
     }

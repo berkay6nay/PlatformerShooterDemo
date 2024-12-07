@@ -19,6 +19,8 @@ public abstract class Gun {
     public int gunHeight = 24;
     public int gunYDifference;
     public double shootingInterval;
+    public int defaultBulletNumber;
+    public int currentBulletNumber;
 
     public void update(Player player){
 
@@ -59,15 +61,11 @@ public abstract class Gun {
     public void shootBullet(Double shootingInterval , BulletGenerator<? extends  Bullet> bulletGenerator){
         double now = System.nanoTime();
         double amountOfTimePassedSinceLastFiring = checkIfCertainAmountOfTimeHasPassedToFire(now);
-        if(amountOfTimePassedSinceLastFiring == 0){
+        if(amountOfTimePassedSinceLastFiring == 0 || amountOfTimePassedSinceLastFiring > shootingInterval ){
             Bullet bullet = bulletGenerator.generate();
             gp.bullets.add(bullet);
             lastFiringTime = now;
-        }
-        else if(amountOfTimePassedSinceLastFiring > shootingInterval){
-            Bullet bullet = bulletGenerator.generate();
-            gp.bullets.add(bullet);
-            lastFiringTime = now;
+            this.currentBulletNumber -= 1;
         }
     }
 
@@ -83,7 +81,4 @@ public abstract class Gun {
         }
         gunY = player.y + gunYDifference;
     }
-
-
-
 }

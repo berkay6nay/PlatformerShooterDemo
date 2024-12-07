@@ -1,4 +1,5 @@
 package org.example;
+import org.example.Entity.Bullets.Bullet;
 import org.example.Entity.Drop;
 import org.example.Entity.Player;
 
@@ -81,4 +82,10 @@ public class CollisionChecker {
         return player.x + player.solidArea.x < drop.x + drop.width && player.x + player.solidArea.x + player.solidArea.width > drop.x
                 && player.y + player.solidArea.y < drop.y + drop.height && player.y + player.solidArea.y + player.solidArea.height > drop.y;
     }
+
+    public boolean checkCollisionBetweenPlayerAndBullet(Player player , Bullet bullet){
+        return player.x + player.solidArea.x < bullet.x + bullet.width && player.x + player.solidArea.x + player.solidArea.width > bullet.x
+                && player.y + player.solidArea.y < bullet.y + bullet.height && player.y + player.solidArea.y + player.solidArea.height > bullet.y;
+    }
+
 }

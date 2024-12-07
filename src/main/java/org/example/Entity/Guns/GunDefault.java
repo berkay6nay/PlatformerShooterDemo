@@ -1,6 +1,8 @@
-package org.example.Entity;
+package org.example.Entity.Guns;
 import java.io.File;
 import org.example.BulletKeyHandler;
+import org.example.Entity.Bullets.DefaultBullet;
+import org.example.Entity.Player;
 import org.example.GamePanel;
 import javax.imageio.ImageIO;
 

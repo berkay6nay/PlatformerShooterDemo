@@ -1,8 +1,9 @@
 package org.example;
 
-import org.example.Entity.Bullet;
+import org.example.Entity.Bullets.Bullet;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class BulletManager {
 
@@ -13,7 +14,13 @@ public class BulletManager {
     }
 
     public static void update(GamePanel gp){
-
+        ArrayList<Bullet> bulletsToRemove = new ArrayList<>();
+        for(Bullet bullet : gp.bullets){
+            if(!bullet.isActive || bullet.x + bullet.width <= 0 || bullet.x >= gp.screenWidth){
+                bulletsToRemove.add(bullet);
+            }
+        }
+        gp.bullets.removeAll(bulletsToRemove);
         for(Bullet bullet : gp.bullets){
             switch (bullet.direction){
                 case "right":

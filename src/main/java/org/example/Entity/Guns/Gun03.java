@@ -1,33 +1,36 @@
-package org.example.Entity;
+package org.example.Entity.Guns;
 
 import org.example.BulletKeyHandler;
+import org.example.Entity.Bullets.Bullet03;
+import org.example.Entity.Player;
 import org.example.GamePanel;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 
-public class Gun04 extends Gun{
+public class Gun03 extends Gun{
 
-    public Gun04(GamePanel gp , BulletKeyHandler kH){
+    public Gun03(GamePanel gp , BulletKeyHandler kH){
         this.gp = gp;
         this.keyH = kH;
-        this.type = "gunNumberFour";
-        this.shootingInterval = 2000000000;
+        this.type = "gunNumberTree";
+        this.shootingInterval = 200000000;
         this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;
         this.gunHeight = 20;
-        this.defaultBulletNumber = 5;
+        this.defaultBulletNumber = 45;
         this.currentBulletNumber = defaultBulletNumber;
         getGunImages();
     }
 
+    @Override
     public void getGunImages(){
         try{
-            right = ImageIO.read(new File("res/Guns/gun_04_right.png"));
-            left = ImageIO.read(new File("res/Guns/gun_04_left.png"));
-            rightResting = ImageIO.read(new File("res/Guns/gun_04_resting_right.png"));
-            leftResting = ImageIO.read(new File("res/Guns/gun_04_resting_left.png"));
+            right = ImageIO.read(new File("res/Guns/gun_03_right.png"));
+            left = ImageIO.read(new File("res/Guns/gun_03_left.png"));
+            rightResting = ImageIO.read(new File("res/Guns/gun_03_resting_right.png"));
+            leftResting = ImageIO.read(new File("res/Guns/gun_03_resting_left.png"));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -42,8 +45,7 @@ public class Gun04 extends Gun{
         }
     }
 
-    public Bullet04 generateBullet(){
-        return new Bullet04(this);
+    public Bullet03 generateBullet(){
+        return new Bullet03(this);
     }
-
 }

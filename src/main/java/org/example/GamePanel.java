@@ -1,6 +1,9 @@
 package org.example;
 
 import org.example.Entity.*;
+import org.example.Entity.Bullets.Bullet;
+import org.example.Entity.Guns.Gun04;
+import org.example.Entity.Guns.GunDefault;
 import org.example.Tiles.TileManager;
 
 import javax.swing.*;
@@ -22,10 +25,16 @@ public class GamePanel extends JPanel implements Runnable {
     final int FPS = 60;
     Thread gameThread;
 
-    KeyHandler keyH = new KeyHandler();
-    public BulletKeyHandler bulletKeyHandler = new BulletKeyHandler();
-    Gun04 gun = new Gun04(this ,bulletKeyHandler);
-    Player player = new Player(this, keyH , gun);
+    KeyHandlerBlue keyHB = new KeyHandlerBlue();
+    public BulletKeyHandlerBlue bulletKeyHandlerBlue = new BulletKeyHandlerBlue();
+    GunDefault gun = new GunDefault(this ,bulletKeyHandlerBlue);
+    PlayerBlue playerBlue = new PlayerBlue(this, keyHB , gun);
+
+    public BulletKeyHandlerRed bulletKeyHandlerRed = new BulletKeyHandlerRed();
+    public KeyHandlerRed keyHR = new KeyHandlerRed();
+    GunDefault gunRed = new GunDefault(this , bulletKeyHandlerRed);
+    PlayerRed playerRed = new PlayerRed(this , keyHR , gunRed);
+
     TileManager tileManager = new TileManager(this);
     public DropManager dropManager = new DropManager(this);
 
@@ -34,8 +43,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(screenWidth , screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
-        this.addKeyListener(keyH);
-        this.addKeyListener(bulletKeyHandler);
+        this.addKeyListener(keyHR);
+        this.addKeyListener(bulletKeyHandlerRed);
+        this.addKeyListener(keyHB);
+        this.addKeyListener(bulletKeyHandlerBlue);
         this.setFocusable(true);
     }
 
@@ -70,8 +81,10 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update(){
-        player.update();
-        player.gun.update(player);
+        playerBlue.update();
+        playerRed.update();
+        playerBlue.gun.update(playerBlue);
+        playerRed.gun.update(playerRed);
         BulletManager.update(this);
         dropManager.update();
 
@@ -80,8 +93,10 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         tileManager.draw(g2);
-        player.draw(g2);
-        player.gun.draw(g2 , player.keyH.playerMovingHorizontally);
+        playerBlue.draw(g2);
+        playerRed.draw(g2);
+        playerBlue.gun.draw(g2 , playerBlue.keyH.playerMovingHorizontally);
+        playerRed.gun.draw(g2 , playerRed.keyH.playerMovingHorizontally);
         dropManager.draw(g2);
         BulletManager.draw(g2 , this);
         g2.dispose();

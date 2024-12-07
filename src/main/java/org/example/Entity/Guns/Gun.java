@@ -1,5 +1,8 @@
-package org.example.Entity;
+package org.example.Entity.Guns;
 import org.example.BulletKeyHandler;
+import org.example.Entity.Bullets.Bullet;
+import org.example.Entity.Bullets.BulletGenerator;
+import org.example.Entity.Player;
 import org.example.GamePanel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -58,7 +61,7 @@ public abstract class Gun {
     }
 
 
-    public void shootBullet(Double shootingInterval , BulletGenerator<? extends  Bullet> bulletGenerator){
+    public void shootBullet(Double shootingInterval , BulletGenerator<? extends Bullet> bulletGenerator){
         double now = System.nanoTime();
         double amountOfTimePassedSinceLastFiring = checkIfCertainAmountOfTimeHasPassedToFire(now);
         if(amountOfTimePassedSinceLastFiring == 0 || amountOfTimePassedSinceLastFiring > shootingInterval ){

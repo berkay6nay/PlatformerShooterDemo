@@ -1,4 +1,6 @@
-package org.example.Entity;
+package org.example.Entity.Bullets;
+
+import org.example.Entity.Guns.Gun;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -7,7 +9,7 @@ public class Bullet04 extends Bullet{
 
     public Bullet04(Gun gun){
         super(gun);
-        speed = 20;
+        speed = 15;
         force = 50;
         width = 11;
         height = 4;

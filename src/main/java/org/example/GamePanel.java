@@ -3,6 +3,7 @@ package org.example;
 import org.example.Entity.*;
 import org.example.Entity.Bullets.Bullet;
 import org.example.Entity.Guns.Gun04;
+import org.example.Entity.Guns.Gun05;
 import org.example.Entity.Guns.GunDefault;
 import org.example.Tiles.TileManager;
 
@@ -27,12 +28,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandlerBlue keyHB = new KeyHandlerBlue();
     public BulletKeyHandlerBlue bulletKeyHandlerBlue = new BulletKeyHandlerBlue();
-    GunDefault gun = new GunDefault(this ,bulletKeyHandlerBlue);
+    Gun05 gun = new Gun05(this ,bulletKeyHandlerBlue);
     PlayerBlue playerBlue = new PlayerBlue(this, keyHB , gun);
 
     public BulletKeyHandlerRed bulletKeyHandlerRed = new BulletKeyHandlerRed();
     public KeyHandlerRed keyHR = new KeyHandlerRed();
-    GunDefault gunRed = new GunDefault(this , bulletKeyHandlerRed);
+    Gun04 gunRed = new Gun04(this , bulletKeyHandlerRed);
     PlayerRed playerRed = new PlayerRed(this , keyHR , gunRed);
 
     TileManager tileManager = new TileManager(this);

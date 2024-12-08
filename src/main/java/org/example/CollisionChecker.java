@@ -47,13 +47,13 @@ public class CollisionChecker {
         calculateCollisionValues(entity);
         int tileNum1 , tileNum2;
             if(entity.direction.equals("left")){
-                entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize;
+                entityLeftCol = (entityLeftWorldX - entity.baseSpeed)/gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
                 return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
             }
             else if(entity.direction.equals("right")){
-                entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
+                entityRightCol = (entityRightWorldX + entity.baseSpeed)/gp.tileSize;
                 tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];
                 tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
                 return gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision;
@@ -62,15 +62,15 @@ public class CollisionChecker {
     }
 
     public boolean isInsideTheBordersOfMap(Player player){
-        if(player.direction.equals("right")) return player.x + player.gp.tileSize + player.speed < player.gp.screenWidth;
-        else return player.x + player.speed > 0;
+        if(player.direction.equals("right")) return player.x + player.gp.tileSize + player.currentSpeed < player.gp.screenWidth;
+        else return player.x - player.currentSpeed > 0;
     }
 
     public boolean checkIfDropSubjectToGravity(Drop drop){
             int tileNum1 , tileNum2;
             entityLeftCol = drop.x / gp.tileSize;
             entityRightCol = (drop.x + drop.width) / gp.tileSize;
-            entityBottomRow = (drop.y + drop.height - 1) / gp.tileSize;
+            entityBottomRow = (drop.y + drop.height - 15) / gp.tileSize;
 
             tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];
             tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];
@@ -86,6 +86,10 @@ public class CollisionChecker {
     public boolean checkCollisionBetweenPlayerAndBullet(Player player , Bullet bullet){
         return player.x + player.solidArea.x < bullet.x + bullet.width && player.x + player.solidArea.x + player.solidArea.width > bullet.x
                 && player.y + player.solidArea.y < bullet.y + bullet.height && player.y + player.solidArea.y + player.solidArea.height > bullet.y;
+    }
+
+    public boolean checkIsInsideBordersWhenAffectedByBullet(Player player){
+        return !(player.x + player.gp.tileSize + player.forceCausedByTheImpactWithBullet > player.gp.screenWidth || player.x - player.forceCausedByTheImpactWithBullet < 0);
     }
 
 }

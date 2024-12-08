@@ -25,12 +25,18 @@ public abstract class Player extends Entity {
     int fallingStartPixel;
     boolean hasFallenOnce;
     int lives;
+    public int forceCausedByTheImpactWithBullet;
+    int bulletForceDetriment;
+    boolean affectedByTheForceOfABullet;
+    String directionOfTheForceFromTheBullet;
+    int speedWhenJumping;
+    public int currentSpeed;
 
 
     public void setDefaultValues() {
-        speed = 5;
+        baseSpeed = 4;
         fallSpeed = 0;
-        maxFallSpeed = 10;
+        maxFallSpeed = 8;
         gravityAcceleration = 1;
         subjectToGravity = true;
         direction = "right";
@@ -38,9 +44,9 @@ public abstract class Player extends Entity {
         jumpDetrimention= 5;
         solidArea = new Rectangle();
         solidArea.x = 8;
-        solidArea.y = 16;
+        solidArea.y = 0;
         solidArea.width = 32;
-        solidArea.height = 32;
+        solidArea.height = 48;
         isStandingOnGround = false;
         isJumping = false;
         hasJumpedOnce = false;
@@ -48,6 +54,10 @@ public abstract class Player extends Entity {
         isFalling = false;
         hasFallenOnce = false;
         lives = 50;
+        bulletForceDetriment = 4;
+        affectedByTheForceOfABullet = false;
+        speedWhenJumping = 2;
+        currentSpeed = baseSpeed;
     }
 
     public void update() {
@@ -75,19 +85,20 @@ public abstract class Player extends Entity {
     }
 
     public void manageLeftAndRightMovement(){
+
             if(keyH.rightPressed){
                 direction = "right";
-                x += speed;
+                x += currentSpeed;
             }
             else if(keyH.leftPressed){
                 direction = "left";
-                x -= speed;
+                x -= currentSpeed;
             }
     }
 
     public void manageSpriteAnimation(){
         spriteCounter++;
-        if(spriteCounter > 10){
+        if(spriteCounter > 8){
             if(spriteNum == 1) spriteNum = 2;
             else if(spriteNum == 2)spriteNum = 1;
             spriteCounter = 0;
@@ -128,11 +139,24 @@ public abstract class Player extends Entity {
         for(Bullet bullet : gp.bullets){
             boolean isCollision = gp.collisionChecker.checkCollisionBetweenPlayerAndBullet(this, bullet);
             if(isCollision){
+                forceCausedByTheImpactWithBullet = bullet.force;
+                directionOfTheForceFromTheBullet = bullet.direction;
                 bullet.isActive = false;
                 System.out.println("I AM HIT AGGGGHHHHHHHHHHHHH");
+                affectedByTheForceOfABullet = true;
             }
         }
     }
 
-
+    public void manageXPositionWhenAffectedByTheForceOfABullet(){
+        if(affectedByTheForceOfABullet){
+            boolean isInsideTheBordersAfterImpactWithBullet = gp.collisionChecker.checkIsInsideBordersWhenAffectedByBullet(this);
+            if(isInsideTheBordersAfterImpactWithBullet){
+                if(directionOfTheForceFromTheBullet.equals("right")) x += forceCausedByTheImpactWithBullet;
+                else if(directionOfTheForceFromTheBullet.equals("left")) x -= forceCausedByTheImpactWithBullet;
+            }
+            forceCausedByTheImpactWithBullet -= bulletForceDetriment;
+            if(forceCausedByTheImpactWithBullet == 0) affectedByTheForceOfABullet = false;
+        }
+    }
 }

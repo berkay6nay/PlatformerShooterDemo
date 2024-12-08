@@ -8,8 +8,6 @@ public class DefaultBullet extends Bullet{
 
     public DefaultBullet(Gun gun){
         super(gun);
-        speed = 15;
-        force = 30;
         loadImage();
     }
 

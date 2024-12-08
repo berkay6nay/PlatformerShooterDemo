@@ -71,14 +71,13 @@ public class PlayerRed extends Player{
                 }
             }
             manageCollisionWithBullets();
+            manageXPositionWhenAffectedByTheForceOfABullet();
         }
 
         else{
-            System.out.println("It is a dreadful thing to fall into the hands of the living god.");
-
             lives -= 1;
-
-            if(y >= 3000){
+            forceCausedByTheImpactWithBullet = 0;
+            if(y >= 8000){
                 x = 360;
                 y = 0;
                 keyH.downReleased = false;
@@ -129,6 +128,9 @@ public class PlayerRed extends Player{
                         break;
                     case "gun04" :
                         this.gun = new Gun04(gp , gp.bulletKeyHandlerRed);
+                        break;
+                    case "gun05" :
+                        this.gun = new Gun05(gp , gp.bulletKeyHandlerRed);
                         break;
                 }
                 toRemove.add(drop);

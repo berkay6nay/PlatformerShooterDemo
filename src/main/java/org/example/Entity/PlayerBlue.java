@@ -51,12 +51,14 @@ public class PlayerBlue extends Player{
                 manageLeftAndRightMovement();
                 y -= jumpSpeed;
                 jumpSpeed -= jumpDetrimention;
+                currentSpeed = speedWhenJumping;
                 if(jumpSpeed == 0){
                     subjectToGravity = true;
                     isJumping = false;
                     jumpSpeed = 30;
                 }
             }
+            else currentSpeed = baseSpeed;
 
             if(isStandingOnGround || (!horizontalCollision && isInsideTheBorders)){
                 manageLeftAndRightMovement();
@@ -72,14 +74,13 @@ public class PlayerBlue extends Player{
             }
 
             manageCollisionWithBullets();
+            manageXPositionWhenAffectedByTheForceOfABullet();
         }
 
         else{
-            System.out.println("It is a dreadful thing to fall into the hands of the living god.");
-
             lives -= 1;
-
-            if(y >= 3000){
+            forceCausedByTheImpactWithBullet = 0;
+            if(y >= 8000){
                 x = 360;
                 y = 0;
                 keyH.downReleased = false;
@@ -116,6 +117,9 @@ public class PlayerBlue extends Player{
                         break;
                     case "gun04" :
                         this.gun = new Gun04(gp , gp.bulletKeyHandlerBlue);
+                        break;
+                    case "gun05" :
+                        this.gun = new Gun05(gp , gp.bulletKeyHandlerBlue);
                         break;
                 }
                 toRemove.add(drop);

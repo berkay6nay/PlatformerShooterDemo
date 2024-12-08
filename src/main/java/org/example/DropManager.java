@@ -10,7 +10,7 @@ import java.util.Random;
 public class DropManager {
     ArrayList<String> dropTypes;
     GamePanel gp;
-    BufferedImage imageDefaultGun , imageGun02 , imageGun03 , imageGun04;
+    BufferedImage dropImage;
     double lastDropTime;
     public ArrayList<Drop> drops;
     Integer width;
@@ -36,34 +36,15 @@ public class DropManager {
             Random random = new Random();
             String randomType = dropTypes.get(random.nextInt(dropTypes.size()));
             Integer randomX = random.nextInt(gp.screenWidth - 3*width - 2*gp.tileSize + 1) + gp.tileSize * 2;
-            switch (randomType){
-                case "default":
-                    Drop drop = new Drop(gp,randomX,randomType,imageDefaultGun , width , height);
-                    drops.add(drop);
-                    break;
-                case "gun02":
-                    Drop drop1 = new Drop(gp , randomX , randomType , imageGun02 , width , height);
-                    drops.add(drop1);
-                    break;
-                case "gun03":
-                    Drop drop2 = new Drop(gp , randomX , randomType , imageGun03 , width , height);
-                    drops.add(drop2);
-                    break;
-                case "gun04":
-                    Drop drop3 = new Drop(gp , randomX , randomType , imageGun04 , width , height);
-                    drops.add(drop3);
-                    break;
-            }
+            Drop drop = new Drop(gp,randomX,randomType,dropImage , width , height);
+            drops.add(drop);
             lastDropTime = now;
         }
     }
 
     public void loadDropImages(){
         try{
-            imageDefaultGun = ImageIO.read(new File("res/Drops/gun_default_drop.png"));
-            imageGun02 = ImageIO.read(new File("res/Drops/gun_02_drop.png"));
-            imageGun03 = ImageIO.read(new File("res/Drops/gun_03_drop.png"));
-            imageGun04 = ImageIO.read(new File("res/Drops/gun_04_drop.png"));
+            dropImage = ImageIO.read(new File("res/Drops/crate.png"));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -88,10 +69,11 @@ public class DropManager {
     }
 
     public void loadDropTypes(){
-        dropTypes.add("default");
         dropTypes.add("gun02");
         dropTypes.add("gun03");
         dropTypes.add("gun04");
+        dropTypes.add("gun05");
+
     }
 
     public double checkIfCertainAmountOfTimeHasPassedToGenerateDrop(Double now){

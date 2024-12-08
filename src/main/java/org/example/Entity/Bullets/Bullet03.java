@@ -9,8 +9,6 @@ public class Bullet03 extends Bullet{
 
     public Bullet03(Gun gun){
         super(gun);
-        speed = 15;
-        force = 25;
         width = 12;
         height = 5;
         loadImage();

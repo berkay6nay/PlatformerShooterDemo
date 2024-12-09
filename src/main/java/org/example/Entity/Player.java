@@ -1,10 +1,12 @@
 package org.example.Entity;
+import org.example.BulletKeyHandler;
 import org.example.Entity.Bullets.Bullet;
 import org.example.Entity.Guns.*;
 import org.example.GamePanel;
 import org.example.KeyHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public abstract class Player extends Entity {
     public GamePanel gp;
@@ -13,7 +15,7 @@ public abstract class Player extends Entity {
     int fallSpeed;
     int maxFallSpeed;
     int gravityAcceleration;
-    int jumpSpeed;
+    public int jumpSpeed;
     int jumpDetrimention;
     boolean isStandingOnGround;
     boolean isJumping;
@@ -31,6 +33,8 @@ public abstract class Player extends Entity {
     String directionOfTheForceFromTheBullet;
     int speedWhenJumping;
     public int currentSpeed;
+    BulletKeyHandler bulletKeyHandler;
+    boolean insideTheBordersAfterUpwardMovement;
 
 
     public void setDefaultValues() {
@@ -61,7 +65,88 @@ public abstract class Player extends Entity {
     }
 
     public void update() {
+        boolean theAbyss = checkIfPlayerHasReachedTheAbyss();
 
+        if(!theAbyss){
+            isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
+
+            startTheProcessOfFalling();
+
+            if(isStandingOnGround & !isFalling) fallingStartPixel =  y + gp.tileSize;
+
+            subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
+
+            horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
+            isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
+
+            managePickingUpGunFromGround();
+
+            if(isStandingOnGround & !isFalling){
+                fallSpeed = 0;
+            }
+
+            startTheProcessOfJumping();
+
+            if (isJumping) {
+
+                subjectToGravity = false;
+
+                currentSpeed = speedWhenJumping;
+
+                manageLeftAndRightMovement();
+
+                insideTheBordersAfterUpwardMovement = gp.collisionChecker.isInsideTheMapAfterUpwardMovement(this);
+
+                if(insideTheBordersAfterUpwardMovement){
+                    manageLeftAndRightMovement();
+                    y -= jumpSpeed;
+                    jumpSpeed -= jumpDetrimention;
+                }
+
+                if(jumpSpeed == 0 || !insideTheBordersAfterUpwardMovement){
+                    subjectToGravity = true;
+                    isJumping = false;
+                    jumpSpeed = 30;
+                }
+
+            } else currentSpeed = baseSpeed;
+
+            if(isStandingOnGround || (!horizontalCollision && isInsideTheBorders)){
+                manageLeftAndRightMovement();
+            }
+
+            manageFallWhenSubjectToGravity(subjectToGravity , isFalling);
+
+            if(isFalling){
+                if(y + gp.tileSize  - fallingStartPixel >= gp.tileSize){
+                    isFalling = false;
+                }
+            }
+
+            manageCollisionWithBullets();
+            manageXPositionWhenAffectedByTheForceOfABullet();
+        }
+
+        else{
+            lives -= 1;
+            forceCausedByTheImpactWithBullet = 0;
+            if(y >= 8000){
+                x = 360;
+                y = 0;
+                keyH.downReleased = false;
+            }
+            else{
+                this.y  += 50;
+            }
+        }
+
+        if(gun.currentBulletNumber == 0){
+            this.gun = new GunDefault(gp , bulletKeyHandler);
+        }
+
+        if(keyH.playerMovingHorizontally){
+            manageSpriteAnimation();
+        }
 
     }
 
@@ -115,12 +200,18 @@ public abstract class Player extends Entity {
             keyH.upReleased = false;
         }
     }
+    public void startTheProcessOfFalling(){
+        if(!hasFallenOnce && keyH.downPressed && isStandingOnGround){
+            isFalling = true; hasFallenOnce = true;
+        }
+        else if(hasFallenOnce && keyH.downReleased && keyH.downPressed && isStandingOnGround){
+            isFalling = true;
+            keyH.downPressed = false;
+            keyH.downReleased = false;
+        }
+    }
     public boolean checkIfPlayerHasReachedTheAbyss(){
         return this.y + this.gp.tileSize >= this.gp.screenHeight;
-    }
-
-    public void managePickingUpGunFromGround(){
-
     }
 
     public void manageFallWhenSubjectToGravity(boolean subjectToGravity , boolean isFalling){
@@ -142,7 +233,6 @@ public abstract class Player extends Entity {
                 forceCausedByTheImpactWithBullet = bullet.force;
                 directionOfTheForceFromTheBullet = bullet.direction;
                 bullet.isActive = false;
-                System.out.println("I AM HIT AGGGGHHHHHHHHHHHHH");
                 affectedByTheForceOfABullet = true;
             }
         }
@@ -158,5 +248,30 @@ public abstract class Player extends Entity {
             forceCausedByTheImpactWithBullet -= bulletForceDetriment;
             if(forceCausedByTheImpactWithBullet == 0) affectedByTheForceOfABullet = false;
         }
+    }
+
+    public void managePickingUpGunFromGround(){
+        ArrayList<Drop> toRemove = new ArrayList<>();
+        for(Drop drop : gp.dropManager.drops){
+            boolean collidesWithDrop = gp.collisionChecker.checkCollisionBetweenPlayerAndDrop(this, drop);
+            if(collidesWithDrop){
+                switch (drop.dropType){
+                    case "gun02" :
+                        this.gun = new Gun02(gp , this.bulletKeyHandler);
+                        break;
+                    case "gun03" :
+                        this.gun = new Gun03(gp , this.bulletKeyHandler);
+                        break;
+                    case "gun04" :
+                        this.gun = new Gun04(gp , this.bulletKeyHandler);
+                        break;
+                    case "gun05" :
+                        this.gun = new Gun05(gp , this.bulletKeyHandler);
+                        break;
+                }
+                toRemove.add(drop);
+            }
+        }
+        gp.dropManager.drops.removeAll(toRemove);
     }
 }

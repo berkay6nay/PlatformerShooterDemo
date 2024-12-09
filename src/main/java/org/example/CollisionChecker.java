@@ -92,4 +92,8 @@ public class CollisionChecker {
         return !(player.x + player.gp.tileSize + player.forceCausedByTheImpactWithBullet > player.gp.screenWidth || player.x - player.forceCausedByTheImpactWithBullet < 0);
     }
 
+    public boolean isInsideTheMapAfterUpwardMovement(Player player){
+        return player.y - player.jumpSpeed >= 0;
+    }
+
 }

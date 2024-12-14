@@ -21,7 +21,7 @@ public abstract class Gun {
     public int gunWidth = 52;
     public int gunHeight = 24;
     public int gunYDifference;
-    public double shootingInterval;
+    public double shootingInterval = 100000000;
     public int defaultBulletNumber;
     public int currentBulletNumber;
 
@@ -69,6 +69,7 @@ public abstract class Gun {
             gp.bullets.add(bullet);
             lastFiringTime = now;
             this.currentBulletNumber -= 1;
+            System.out.println(currentBulletNumber);
         }
     }
 

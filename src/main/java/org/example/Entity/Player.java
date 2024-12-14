@@ -35,6 +35,7 @@ public abstract class Player extends Entity {
     public int currentSpeed;
     BulletKeyHandler bulletKeyHandler;
     boolean insideTheBordersAfterUpwardMovement;
+    int spawningX;
 
 
     public void setDefaultValues() {
@@ -43,7 +44,6 @@ public abstract class Player extends Entity {
         maxFallSpeed = 8;
         gravityAcceleration = 1;
         subjectToGravity = true;
-        direction = "right";
         jumpSpeed = 20;
         jumpDetrimention= 5;
         solidArea = new Rectangle();
@@ -70,6 +70,7 @@ public abstract class Player extends Entity {
         if(!theAbyss){
             isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
 
+
             startTheProcessOfFalling();
 
             if(isStandingOnGround & !isFalling) fallingStartPixel =  y + gp.tileSize;
@@ -77,7 +78,7 @@ public abstract class Player extends Entity {
             subjectToGravity = !gp.collisionChecker.checkIfStandingOnGround(this);
 
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
-            isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
+
 
             managePickingUpGunFromGround();
 
@@ -111,7 +112,18 @@ public abstract class Player extends Entity {
 
             } else currentSpeed = baseSpeed;
 
-            if(isStandingOnGround || (!horizontalCollision && isInsideTheBorders)){
+            if(keyH.rightPressed){
+                direction = "right";
+            }
+            else if(keyH.leftPressed){
+                direction = "left";
+            }
+
+            isInsideTheBorders = gp.collisionChecker.isInsideTheBordersOfMap(this);
+
+            if(!isStandingOnGround && !horizontalCollision && isInsideTheBorders){
+                manageLeftAndRightMovement();
+            } else if (isStandingOnGround) {
                 manageLeftAndRightMovement();
             }
 
@@ -131,8 +143,9 @@ public abstract class Player extends Entity {
             lives -= 1;
             forceCausedByTheImpactWithBullet = 0;
             if(y >= 8000){
-                x = 360;
+                x = spawningX;
                 y = 0;
+                this.gun = new GunDefault(gp ,bulletKeyHandler);
                 keyH.downReleased = false;
             }
             else{
@@ -140,7 +153,7 @@ public abstract class Player extends Entity {
             }
         }
 
-        if(gun.currentBulletNumber == 0){
+        if(gun.currentBulletNumber == 0 && !gun.type.equals("default")){
             this.gun = new GunDefault(gp , bulletKeyHandler);
         }
 

@@ -62,8 +62,8 @@ public class CollisionChecker {
     }
 
     public boolean isInsideTheBordersOfMap(Player player){
-        if(player.direction.equals("right")) return player.x + player.gp.tileSize + player.currentSpeed < player.gp.screenWidth;
-        else return player.x - player.currentSpeed > 0;
+        if(player.direction.equals("right")) return player.x + player.gp.tileSize + player.currentSpeed <= player.gp.screenWidth;
+        else return player.x - player.currentSpeed >= 0;
     }
 
     public boolean checkIfDropSubjectToGravity(Drop drop){

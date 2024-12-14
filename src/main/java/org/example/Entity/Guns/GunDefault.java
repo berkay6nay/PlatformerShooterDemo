@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 public class GunDefault extends Gun{
 
     public boolean isReloading;
-    public double creationTime;
-
+    public double timeOfBeingEmptied;
+    public double reloadingTime = 1500000000F;
     public GunDefault(GamePanel gp , BulletKeyHandler kH){
         this.gp = gp;
         this.keyH = kH;
@@ -18,11 +18,10 @@ public class GunDefault extends Gun{
         this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 5;
-        this.shootingInterval = 200000000;
-        this.defaultBulletNumber = 20;
+        this.shootingInterval = 1000000000;
+        this.defaultBulletNumber = 10;
         this.currentBulletNumber = defaultBulletNumber;
-        this.isReloading = true;
-        this.creationTime = System.nanoTime();
+        this.isReloading = false;
         getGunImages();
     }
 
@@ -42,23 +41,30 @@ public class GunDefault extends Gun{
 
     @Override
     public void update(Player player){
+
         manageGunPositionAndDirection(player);
-        double timeBetweenNowAndGunCreation = calculateTimeBetweenNowAndGunCreation();
-        if(timeBetweenNowAndGunCreation < 1500000000F) System.out.println("reloading");
-        else isReloading = false;
+        double now = System.nanoTime();
+
+        if(currentBulletNumber == 0 && !isReloading){
+            System.out.println("reloading");
+            timeOfBeingEmptied = System.nanoTime();
+            isReloading = true;
+        }
+
+        if(isReloading && now - timeOfBeingEmptied > reloadingTime){
+            currentBulletNumber = defaultBulletNumber;
+            timeOfBeingEmptied = 0;
+            isReloading = false;
+        }
 
         if(keyH.gunBeingShot && !isReloading){
+            System.out.println(currentBulletNumber);
             shootBullet(shootingInterval , this::generateBullet);
         }
     }
 
     public DefaultBullet generateBullet(){
         return new DefaultBullet(this);
-    }
-
-    public double calculateTimeBetweenNowAndGunCreation(){
-        double now = System.nanoTime();
-        return now - creationTime;
     }
 
 }

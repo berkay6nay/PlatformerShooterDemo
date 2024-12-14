@@ -28,13 +28,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandlerBlue keyHB = new KeyHandlerBlue();
     public BulletKeyHandlerBlue bulletKeyHandlerBlue = new BulletKeyHandlerBlue();
-    Gun05 gun = new Gun05(this ,bulletKeyHandlerBlue);
+    GunDefault gun = new GunDefault(this ,bulletKeyHandlerBlue);
     PlayerBlue playerBlue = new PlayerBlue(this, keyHB , gun , bulletKeyHandlerBlue);
 
     public BulletKeyHandlerRed bulletKeyHandlerRed = new BulletKeyHandlerRed();
     public KeyHandlerRed keyHR = new KeyHandlerRed();
-    Gun04 gunRed = new Gun04(this , bulletKeyHandlerRed);
-    PlayerRed playerRed = new PlayerRed(this , keyHR , gunRed , bulletKeyHandlerRed);
+    GunDefault gunDefault = new GunDefault(this , bulletKeyHandlerRed);
+    PlayerRed playerRed = new PlayerRed(this , keyHR , gunDefault , bulletKeyHandlerRed);
 
     TileManager tileManager = new TileManager(this);
     public DropManager dropManager = new DropManager(this);

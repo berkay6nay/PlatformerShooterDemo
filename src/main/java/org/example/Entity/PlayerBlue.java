@@ -16,8 +16,10 @@ public class PlayerBlue extends Player{
         this.gp = gp;
         this.bulletKeyHandler = bulletKeyHandler;
         this.keyH = keyH;
-        this.x = 300;
+        this.spawningX = 500;
+        this.x = spawningX;
         this.y = 50;
+        this.direction = "left";
         setDefaultValues();
         getPlayerImage();
         this.gun = gun;

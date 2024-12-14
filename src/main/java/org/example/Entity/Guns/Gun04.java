@@ -14,12 +14,12 @@ public class Gun04 extends Gun{
         this.gp = gp;
         this.keyH = kH;
         this.type = "gunNumberFour";
-        this.shootingInterval = 2000000000;
         this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;
         this.gunHeight = 20;
         this.defaultBulletNumber = 5;
+        this.shootingInterval = 2000000000;
         this.currentBulletNumber = defaultBulletNumber;
         getGunImages();
     }

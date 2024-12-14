@@ -15,9 +15,11 @@ public class PlayerRed extends Player{
         this.gp = gp;
         this.keyH = kH;
         this.bulletKeyHandler = bulletKeyHandler;
-        this.x = 600;
+        this.spawningX = 300;
+        this.x = spawningX;
         this.y = 50;
-        this.direction = "left";
+        this.direction = "right";
+
         setDefaultValues();
         getPlayerImage();
         this.gun = gun;

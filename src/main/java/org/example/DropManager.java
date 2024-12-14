@@ -32,7 +32,7 @@ public class DropManager {
         double now = System.nanoTime();
         double timePassedSinceLastDropGeneration = checkIfCertainAmountOfTimeHasPassedToGenerateDrop(now);
 
-        if(timePassedSinceLastDropGeneration > 10000000000L && drops.size() <= 2){
+        if(timePassedSinceLastDropGeneration > 5000000000L && drops.size() <= 6){
             Random random = new Random();
             String randomType = dropTypes.get(random.nextInt(dropTypes.size()));
             Integer randomX = random.nextInt(gp.screenWidth - 3*width - 2*gp.tileSize + 1) + gp.tileSize * 2;

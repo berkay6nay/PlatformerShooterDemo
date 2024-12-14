@@ -14,7 +14,6 @@ public class Gun05 extends Gun{
         this.gp = gp;
         this.keyH = kH;
         this.type = "gunNumberFive";
-        this.shootingInterval = 500000000;
         this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;

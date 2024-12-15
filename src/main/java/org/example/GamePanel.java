@@ -2,8 +2,6 @@ package org.example;
 
 import org.example.Entity.*;
 import org.example.Entity.Bullets.Bullet;
-import org.example.Entity.Guns.Gun04;
-import org.example.Entity.Guns.Gun05;
 import org.example.Entity.Guns.GunDefault;
 import org.example.Tiles.TileManager;
 
@@ -38,6 +36,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     TileManager tileManager = new TileManager(this);
     public DropManager dropManager = new DropManager(this);
+
+    PlayerInfoPanelBlue panelBlue = new PlayerInfoPanelBlue(playerBlue , this);
+    PlayerInfoPanelRed panelRed = new PlayerInfoPanelRed(playerRed , this);
 
     public CollisionChecker collisionChecker = new CollisionChecker(this);
     public GamePanel(){
@@ -81,6 +82,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
+
     public void update(){
         playerBlue.update();
         playerRed.update();
@@ -90,6 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
         dropManager.update();
 
     }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -99,6 +102,8 @@ public class GamePanel extends JPanel implements Runnable {
         playerBlue.gun.draw(g2 , playerBlue.keyH.playerMovingHorizontally);
         playerRed.gun.draw(g2 , playerRed.keyH.playerMovingHorizontally);
         dropManager.draw(g2);
+        panelBlue.drawPlayerPanel(g2);
+        panelRed.drawPlayerPanel(g2);
         BulletManager.draw(g2 , this);
         g2.dispose();
     }

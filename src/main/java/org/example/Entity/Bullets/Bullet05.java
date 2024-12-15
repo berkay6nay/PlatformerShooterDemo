@@ -11,6 +11,7 @@ public class Bullet05 extends Bullet{
         super(gun);
         width = 12;
         height = 5;
+        this.force = 20;
         loadImage();
     }
 

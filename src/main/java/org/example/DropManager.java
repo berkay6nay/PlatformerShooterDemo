@@ -73,6 +73,8 @@ public class DropManager {
         dropTypes.add("gun03");
         dropTypes.add("gun04");
         dropTypes.add("gun05");
+        dropTypes.add("gun06");
+        dropTypes.add("gun07");
 
     }
 

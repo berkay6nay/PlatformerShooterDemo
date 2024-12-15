@@ -1,4 +1,5 @@
 package org.example.Entity;
+import org.example.Armor;
 import org.example.BulletKeyHandler;
 import org.example.Entity.Bullets.Bullet;
 import org.example.Entity.Guns.*;
@@ -36,6 +37,7 @@ public abstract class Player extends Entity {
     BulletKeyHandler bulletKeyHandler;
     boolean insideTheBordersAfterUpwardMovement;
     int spawningX;
+    Armor armor;
 
 
     public void setDefaultValues() {
@@ -51,17 +53,11 @@ public abstract class Player extends Entity {
         solidArea.y = 0;
         solidArea.width = 32;
         solidArea.height = 48;
-        isStandingOnGround = false;
-        isJumping = false;
-        hasJumpedOnce = false;
-        horizontalCollision = false;
-        isFalling = false;
-        hasFallenOnce = false;
         lives = 50;
-        bulletForceDetriment = 4;
-        affectedByTheForceOfABullet = false;
+        bulletForceDetriment = 2;
         speedWhenJumping = 2;
         currentSpeed = baseSpeed;
+        armor = new Armor(this);
     }
 
     public void update() {
@@ -135,15 +131,17 @@ public abstract class Player extends Entity {
                 }
             }
 
+            manageArmor();
             manageCollisionWithBullets();
             manageXPositionWhenAffectedByTheForceOfABullet();
         }
 
         else{
-            lives -= 1;
             forceCausedByTheImpactWithBullet = 0;
             if(y >= 8000){
+                lives -= 1;
                 x = spawningX;
+                this.armor = new Armor(this);
                 y = 0;
                 this.gun = new GunDefault(gp ,bulletKeyHandler);
                 keyH.downReleased = false;
@@ -176,6 +174,7 @@ public abstract class Player extends Entity {
                 break;
         }
         g2.drawImage(image , x,y,gp.tileSize , gp.tileSize , null);
+        armor.draw(g2);
     }
 
     public void getPlayerImage(){
@@ -242,7 +241,7 @@ public abstract class Player extends Entity {
     public void manageCollisionWithBullets(){
         for(Bullet bullet : gp.bullets){
             boolean isCollision = gp.collisionChecker.checkCollisionBetweenPlayerAndBullet(this, bullet);
-            if(isCollision){
+            if(isCollision && !armor.isActive){
                 forceCausedByTheImpactWithBullet = bullet.force;
                 directionOfTheForceFromTheBullet = bullet.direction;
                 bullet.isActive = false;
@@ -281,10 +280,24 @@ public abstract class Player extends Entity {
                     case "gun05" :
                         this.gun = new Gun05(gp , this.bulletKeyHandler);
                         break;
+                    case "gun06" :
+                        this.gun = new Gun06(gp , this.bulletKeyHandler);
+                        break;
+                    case "gun07" :
+                        this.gun = new Gun07(gp , this.bulletKeyHandler);
+                        break;
                 }
                 toRemove.add(drop);
             }
         }
         gp.dropManager.drops.removeAll(toRemove);
+    }
+
+    public void manageArmor(){
+        double now = System.nanoTime();
+        armor.update(this);
+        if(now - armor.activationTime >= 3000000000L){
+            armor.isActive = false;
+        }
     }
 }

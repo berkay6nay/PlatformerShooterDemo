@@ -9,6 +9,7 @@ public class Bullet02 extends Bullet{
 
     public Bullet02(Gun gun) {
         super(gun);
+        this.force = 16;
         loadImage();
     }
 

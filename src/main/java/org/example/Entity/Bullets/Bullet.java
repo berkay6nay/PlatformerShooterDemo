@@ -17,8 +17,8 @@ public abstract class Bullet {
 
     public Bullet(Gun gun){
 
-        force = 24;
-        speed = 20;
+        force = 18;
+        speed = 18;
 
         if(gun.gunDirection.equals("right")){
             x = gun.gunX + gun.gunWidth;

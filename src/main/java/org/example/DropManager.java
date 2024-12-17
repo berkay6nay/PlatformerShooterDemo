@@ -32,7 +32,7 @@ public class DropManager {
         double now = System.nanoTime();
         double timePassedSinceLastDropGeneration = checkIfCertainAmountOfTimeHasPassedToGenerateDrop(now);
 
-        if(timePassedSinceLastDropGeneration > 5000000000L && drops.size() <= 6){
+        if(timePassedSinceLastDropGeneration > 10000000000L && drops.size() <= 2){
             Random random = new Random();
             String randomType = dropTypes.get(random.nextInt(dropTypes.size()));
             Integer randomX = random.nextInt(gp.screenWidth - 3*width - 2*gp.tileSize + 1) + gp.tileSize * 2;
@@ -53,6 +53,7 @@ public class DropManager {
 
     public void update(){
         generateDrop();
+        removeDropAfterCertainAmountOfTime();
         for(Drop drop : drops){
             if(gp.collisionChecker.checkIfDropSubjectToGravity(drop)){
                 drop.y += fallSpeed;
@@ -84,5 +85,16 @@ public class DropManager {
             return 0;
         }
         return now - lastDropTime;
+    }
+
+    public void removeDropAfterCertainAmountOfTime(){
+        double now = System.nanoTime();
+        ArrayList<Drop> dropsToRemove = new ArrayList<>();
+        for(Drop drop : drops){
+            if(now - drop.creationTime >= 10000000000L){
+                dropsToRemove.add(drop);
+            }
+        }
+        drops.removeAll(dropsToRemove);
     }
 }

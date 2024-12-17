@@ -1,6 +1,7 @@
 package org.example;
 import org.example.Entity.Bullets.Bullet;
 import org.example.Entity.Drop;
+import org.example.Entity.Perk;
 import org.example.Entity.Player;
 
 public class CollisionChecker {
@@ -94,6 +95,11 @@ public class CollisionChecker {
 
     public boolean isInsideTheMapAfterUpwardMovement(Player player){
         return player.y - player.jumpSpeed >= 0;
+    }
+
+    public boolean checkCollisionBetweenPlayerAndPerk(Player player , Perk perk){
+        return player.x + player.solidArea.x < perk.x + perk.width && player.x + player.solidArea.x + player.solidArea.width > perk.x
+                && player.y + player.solidArea.y < perk.y + perk.height && player.y + player.solidArea.y + player.solidArea.height > perk.y;
     }
 
 }

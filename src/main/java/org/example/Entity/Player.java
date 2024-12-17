@@ -38,10 +38,15 @@ public abstract class Player extends Entity {
     boolean insideTheBordersAfterUpwardMovement;
     int spawningX;
     Armor armor;
-
+    int baseSpeedWhenSpeedBoost;
+    boolean isSpeedBoostActive;
+    double lastSpeedBoostTime;
+    int baseSpeedWhenNotSpeedBoost;
 
     public void setDefaultValues() {
         baseSpeed = 4;
+        baseSpeedWhenNotSpeedBoost = 4;
+        baseSpeedWhenSpeedBoost = 7;
         fallSpeed = 0;
         maxFallSpeed = 8;
         gravityAcceleration = 1;
@@ -57,7 +62,7 @@ public abstract class Player extends Entity {
         bulletForceDetriment = 2;
         speedWhenJumping = 2;
         currentSpeed = baseSpeed;
-        armor = new Armor(this);
+        armor = new Armor(this , "spawnArmor");
     }
 
     public void update() {
@@ -66,6 +71,8 @@ public abstract class Player extends Entity {
         if(!theAbyss){
             isStandingOnGround = gp.collisionChecker.checkIfStandingOnGround(this);
 
+            if(isSpeedBoostActive) baseSpeed = baseSpeedWhenSpeedBoost;
+            else baseSpeed = baseSpeedWhenNotSpeedBoost;
 
             startTheProcessOfFalling();
 
@@ -77,6 +84,8 @@ public abstract class Player extends Entity {
 
 
             managePickingUpGunFromGround();
+            manageCollisionWithPerks();
+
 
             if(isStandingOnGround & !isFalling){
                 fallSpeed = 0;
@@ -132,6 +141,7 @@ public abstract class Player extends Entity {
             }
 
             manageArmor();
+            manageSpeedBoost();
             manageCollisionWithBullets();
             manageXPositionWhenAffectedByTheForceOfABullet();
         }
@@ -141,7 +151,7 @@ public abstract class Player extends Entity {
             if(y >= 8000){
                 lives -= 1;
                 x = spawningX;
-                this.armor = new Armor(this);
+                this.armor = new Armor(this , "spawnArmor");
                 y = 0;
                 this.gun = new GunDefault(gp ,bulletKeyHandler);
                 keyH.downReleased = false;
@@ -212,6 +222,7 @@ public abstract class Player extends Entity {
             keyH.upReleased = false;
         }
     }
+
     public void startTheProcessOfFalling(){
         if(!hasFallenOnce && keyH.downPressed && isStandingOnGround){
             isFalling = true; hasFallenOnce = true;
@@ -222,6 +233,7 @@ public abstract class Player extends Entity {
             keyH.downReleased = false;
         }
     }
+
     public boolean checkIfPlayerHasReachedTheAbyss(){
         return this.y + this.gp.tileSize >= this.gp.screenHeight;
     }
@@ -293,11 +305,46 @@ public abstract class Player extends Entity {
         gp.dropManager.drops.removeAll(toRemove);
     }
 
+    public void manageCollisionWithPerks(){
+        ArrayList<Perk> toRemove = new ArrayList<>();
+        for(Perk perk : gp.perkManager.perks){
+            boolean collidesWithPerk = gp.collisionChecker.checkCollisionBetweenPlayerAndPerk(this,perk);
+            if(collidesWithPerk){
+                switch (perk.type){
+                    case "lifeUp" :
+                        lives += 1;
+                        break;
+                    case "speedUp" :
+                        if(!isSpeedBoostActive){
+                            lastSpeedBoostTime = System.nanoTime();
+                            isSpeedBoostActive = true;
+                        }
+                        break;
+                    case "armor" :
+                        armor = new Armor(this, "perkArmor");
+                        break;
+                }
+                toRemove.add(perk);
+            }
+        }
+        gp.perkManager.perks.removeAll(toRemove);
+    }
+
     public void manageArmor(){
         double now = System.nanoTime();
         armor.update(this);
-        if(now - armor.activationTime >= 3000000000L){
+        if(now - armor.activationTime >= 2000000000L && armor.type.equals("spawnArmor")){
             armor.isActive = false;
+        }
+        if(now - armor.activationTime >= 7000000000L && armor.type.equals("perkArmor")){
+            armor.isActive = false;
+        }
+    }
+
+    public void manageSpeedBoost(){
+        double now = System.nanoTime();
+        if(isSpeedBoostActive && now - lastSpeedBoostTime >= 5000000000L){
+            isSpeedBoostActive = false;
         }
     }
 }

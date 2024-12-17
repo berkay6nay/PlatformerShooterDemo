@@ -16,14 +16,16 @@ public class Armor {
     public int width;
     public double activationTime;
     public BufferedImage image;
+    public String type;
 
-    public Armor(Player player){
+    public Armor(Player player , String type){
         this.x = player.x;
         this.y = player.y;
         this.width = player.gp.tileSize;
         this.height = player.gp.tileSize;
         this.isActive = true;
         this.activationTime = System.nanoTime();
+        this.type = type;
         loadImage();
     }
 

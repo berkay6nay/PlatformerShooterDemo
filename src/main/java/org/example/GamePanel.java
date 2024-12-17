@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     TileManager tileManager = new TileManager(this);
     public DropManager dropManager = new DropManager(this);
+    public PerkManager perkManager = new PerkManager(this);
 
     PlayerInfoPanelBlue panelBlue = new PlayerInfoPanelBlue(playerBlue , this);
     PlayerInfoPanelRed panelRed = new PlayerInfoPanelRed(playerRed , this);
@@ -90,7 +91,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerRed.gun.update(playerRed);
         BulletManager.update(this);
         dropManager.update();
-
+        perkManager.update();
     }
 
     public void paintComponent(Graphics g){
@@ -102,6 +103,7 @@ public class GamePanel extends JPanel implements Runnable {
         playerBlue.gun.draw(g2 , playerBlue.keyH.playerMovingHorizontally);
         playerRed.gun.draw(g2 , playerRed.keyH.playerMovingHorizontally);
         dropManager.draw(g2);
+        perkManager.draw(g2);
         panelBlue.drawPlayerPanel(g2);
         panelRed.drawPlayerPanel(g2);
         BulletManager.draw(g2 , this);

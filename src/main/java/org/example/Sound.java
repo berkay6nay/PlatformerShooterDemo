@@ -17,6 +17,8 @@ public class Sound {
         soundURL[4] = new File("res/SoundFX/bullet03.wav");
         soundURL[5] = new File("res/SoundFX/bullet05.wav");
         soundURL[6] = new File("res/SoundFX/defaultBullet.wav");
+        soundURL[7] = new File("res/SoundFX/bullet06.wav");
+        soundURL[8] = new File("res/SoundFX/bullet07.wav");
     }
 
     public void setFile(int i){

@@ -58,7 +58,7 @@ public abstract class Player extends Entity {
         solidArea.y = 0;
         solidArea.width = 32;
         solidArea.height = 48;
-        lives = 3;
+        lives = 50;
         bulletForceDetriment = 2;
         speedWhenJumping = 2;
         currentSpeed = baseSpeed;

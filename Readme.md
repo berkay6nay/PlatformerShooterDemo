@@ -14,17 +14,21 @@ This version is an initial demo. All the tiles, animations, sound effects and bu
 ### Requirements: Java 17 or a higher version of Java
 
 ### How To Build:
+Clone this repository:
 
-Clone The Project:
-   
-    git clone https://github.com/berkay6nay/PlatformerShooterDemo
+```bash
+   git clone https://github.com/yourusername/your-repo.git
+```
 
 Navigate To Directory:
 
+```bash
     cd PlatformerShooterDemo
+```
 
 Run The Jar Package:
 
+```bash
     java -jar release/PixelGun-1.0-SNAPSHOT.jar
-
+```
 

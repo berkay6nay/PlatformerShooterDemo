@@ -17,7 +17,7 @@ public class PlayerRed extends Player{
         this.bulletKeyHandler = bulletKeyHandler;
         this.spawningX = 300;
         this.x = spawningX;
-        this.y = 50;
+        this.y = 0;
         this.direction = "right";
 
         setDefaultValues();

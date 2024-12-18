@@ -47,6 +47,7 @@ public class Gun02 extends Gun{
 
 
     public Bullet02 generateBullet(){
+        gp.playSoundFX(3);
         return new Bullet02(this);
     }
 }

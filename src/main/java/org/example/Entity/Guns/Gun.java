@@ -69,7 +69,6 @@ public abstract class Gun {
             gp.bullets.add(bullet);
             lastFiringTime = now;
             this.currentBulletNumber -= 1;
-            System.out.println(currentBulletNumber);
         }
     }
 

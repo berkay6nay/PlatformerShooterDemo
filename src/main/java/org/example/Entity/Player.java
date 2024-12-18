@@ -27,7 +27,7 @@ public abstract class Player extends Entity {
     public Gun gun;
     int fallingStartPixel;
     boolean hasFallenOnce;
-    int lives;
+    public int lives;
     public int forceCausedByTheImpactWithBullet;
     int bulletForceDetriment;
     boolean affectedByTheForceOfABullet;
@@ -58,7 +58,7 @@ public abstract class Player extends Entity {
         solidArea.y = 0;
         solidArea.width = 32;
         solidArea.height = 48;
-        lives = 50;
+        lives = 3;
         bulletForceDetriment = 2;
         speedWhenJumping = 2;
         currentSpeed = baseSpeed;
@@ -148,6 +148,9 @@ public abstract class Player extends Entity {
 
         else{
             forceCausedByTheImpactWithBullet = 0;
+            if(isSpeedBoostActive){
+                isSpeedBoostActive = false;
+            }
             if(y >= 8000){
                 lives -= 1;
                 x = spawningX;
@@ -254,6 +257,7 @@ public abstract class Player extends Entity {
         for(Bullet bullet : gp.bullets){
             boolean isCollision = gp.collisionChecker.checkCollisionBetweenPlayerAndBullet(this, bullet);
             if(isCollision && !armor.isActive){
+                gp.playSoundFX(2);
                 forceCausedByTheImpactWithBullet = bullet.force;
                 directionOfTheForceFromTheBullet = bullet.direction;
                 bullet.isActive = false;
@@ -313,6 +317,7 @@ public abstract class Player extends Entity {
                 switch (perk.type){
                     case "lifeUp" :
                         lives += 1;
+                        gp.playSoundFX(1);
                         break;
                     case "speedUp" :
                         if(!isSpeedBoostActive){

@@ -41,10 +41,13 @@ public class Gun04 extends Gun{
         manageGunPositionAndDirection(player);
         if(keyH.gunBeingShot){
             shootBullet(shootingInterval , this::generateBullet);
+
         }
     }
 
-    public Bullet04 generateBullet(){
+    public Bullet04 generateBullet()
+    {
+        gp.playSoundFX(0);
         return new Bullet04(this);
     }
 

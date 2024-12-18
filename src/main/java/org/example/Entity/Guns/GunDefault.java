@@ -64,6 +64,7 @@ public class GunDefault extends Gun{
     }
 
     public DefaultBullet generateBullet(){
+        gp.playSoundFX(6);
         return new DefaultBullet(this);
     }
 

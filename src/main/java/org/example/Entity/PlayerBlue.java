@@ -18,7 +18,7 @@ public class PlayerBlue extends Player{
         this.keyH = keyH;
         this.spawningX = 500;
         this.x = spawningX;
-        this.y = 50;
+        this.y = 0;
         this.direction = "left";
         setDefaultValues();
         getPlayerImage();

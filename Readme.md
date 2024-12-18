@@ -17,7 +17,7 @@ This version is an initial demo. All the tiles, animations, sound effects and bu
 Clone this repository:
 
 ```bash
-   git clone https://github.com/yourusername/your-repo.git
+   git clone https://github.com/berkay6nay/PlatformerShooterDemo.git
 ```
 
 Navigate To Directory:

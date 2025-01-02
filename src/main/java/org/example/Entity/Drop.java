@@ -4,14 +4,9 @@ import org.example.GamePanel;
 import java.awt.image.BufferedImage;
 
 
-public class Drop {
-    public BufferedImage image;
-    public int x;
-    public int y;
+public class Drop extends BaseEntity {
+
     public String dropType;
-    public GamePanel gp;
-    public int width;
-    public int height;
     public double creationTime;
 
     public Drop(GamePanel gp , Integer x , String dropType , BufferedImage image , Integer width , Integer height){

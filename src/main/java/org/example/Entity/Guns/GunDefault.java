@@ -10,18 +10,18 @@ public class GunDefault extends Gun{
 
     public boolean isReloading;
     public double timeOfBeingEmptied;
-    public double reloadingTime = 1500000000F;
+    public double reloadingTime = 1000000000F;
     public GunDefault(GamePanel gp , BulletKeyHandler kH){
         this.gp = gp;
         this.keyH = kH;
-        this.type = "default";
-        this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 8;
+        this.gunXDifferenceWhenFacingRight = gp.tileSize/3 - 4;
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
-        this.gunYDifference = gp.tileSize/4 + 5;
-        this.shootingInterval = 700000000;
-        this.defaultBulletNumber = 10;
+        this.gunYDifference = gp.tileSize/4 + 7;
+        this.shootingInterval = 500000000;
+        this.defaultBulletNumber = 15;
         this.currentBulletNumber = defaultBulletNumber;
         this.isReloading = false;
+        this.type = "default";
         getGunImages();
     }
 

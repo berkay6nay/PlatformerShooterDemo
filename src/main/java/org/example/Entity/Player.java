@@ -7,9 +7,9 @@ import org.example.GamePanel;
 import org.example.KeyHandler;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
-public abstract class Player extends Entity {
+public abstract class Player {
+    public int x,y;
     public GamePanel gp;
     public KeyHandler keyH;
     boolean subjectToGravity;
@@ -34,14 +34,24 @@ public abstract class Player extends Entity {
     String directionOfTheForceFromTheBullet;
     int speedWhenJumping;
     public int currentSpeed;
-    BulletKeyHandler bulletKeyHandler;
+    public BulletKeyHandler bulletKeyHandler;
     boolean insideTheBordersAfterUpwardMovement;
     int spawningX;
-    Armor armor;
+    public Armor armor;
     int baseSpeedWhenSpeedBoost;
-    boolean isSpeedBoostActive;
-    double lastSpeedBoostTime;
+    public boolean isSpeedBoostActive;
+    public double lastSpeedBoostTime;
     int baseSpeedWhenNotSpeedBoost;
+    public int baseSpeed;
+    public BufferedImage left1 , left2 , right1 , right2;
+    public String direction;
+    public int spriteCounter = 0;
+    public int spriteNum = 1;
+    public double speedBoostDuration;
+    public double spawnArmorDuration;
+    public double perkArmorDuration;
+
+    public Rectangle solidArea;
 
     public void setDefaultValues() {
         baseSpeed = 4;
@@ -51,7 +61,7 @@ public abstract class Player extends Entity {
         maxFallSpeed = 8;
         gravityAcceleration = 1;
         subjectToGravity = true;
-        jumpSpeed = 20;
+        jumpSpeed = 15;
         jumpDetrimention= 5;
         solidArea = new Rectangle();
         solidArea.x = 8;
@@ -63,6 +73,9 @@ public abstract class Player extends Entity {
         speedWhenJumping = 2;
         currentSpeed = baseSpeed;
         armor = new Armor(this , "spawnArmor");
+        speedBoostDuration = 5000000000L;
+        spawnArmorDuration = 200000000L;
+        perkArmorDuration = 900000000L;
     }
 
     public void update() {
@@ -82,10 +95,8 @@ public abstract class Player extends Entity {
 
             horizontalCollision = gp.collisionChecker.checkCollisionHorizontally(this);
 
-
-            managePickingUpGunFromGround();
-            manageCollisionWithPerks();
-
+            gp.dropManager.managePickingUpDropFromGround(this);
+            gp.perkManager.managePickingUpPerk(this);
 
             if(isStandingOnGround & !isFalling){
                 fallSpeed = 0;
@@ -255,7 +266,7 @@ public abstract class Player extends Entity {
 
     public void manageCollisionWithBullets(){
         for(Bullet bullet : gp.bullets){
-            boolean isCollision = gp.collisionChecker.checkCollisionBetweenPlayerAndBullet(this, bullet);
+            boolean isCollision = gp.collisionChecker.checkCollisionBetweenPlayerAndEntity(this, bullet);
             if(isCollision && !armor.isActive){
                 gp.playSoundFX(2);
                 forceCausedByTheImpactWithBullet = bullet.force;
@@ -278,77 +289,20 @@ public abstract class Player extends Entity {
         }
     }
 
-    public void managePickingUpGunFromGround(){
-        ArrayList<Drop> toRemove = new ArrayList<>();
-        for(Drop drop : gp.dropManager.drops){
-            boolean collidesWithDrop = gp.collisionChecker.checkCollisionBetweenPlayerAndDrop(this, drop);
-            if(collidesWithDrop){
-                switch (drop.dropType){
-                    case "gun02" :
-                        this.gun = new Gun02(gp , this.bulletKeyHandler);
-                        break;
-                    case "gun03" :
-                        this.gun = new Gun03(gp , this.bulletKeyHandler);
-                        break;
-                    case "gun04" :
-                        this.gun = new Gun04(gp , this.bulletKeyHandler);
-                        break;
-                    case "gun05" :
-                        this.gun = new Gun05(gp , this.bulletKeyHandler);
-                        break;
-                    case "gun06" :
-                        this.gun = new Gun06(gp , this.bulletKeyHandler);
-                        break;
-                    case "gun07" :
-                        this.gun = new Gun07(gp , this.bulletKeyHandler);
-                        break;
-                }
-                toRemove.add(drop);
-            }
-        }
-        gp.dropManager.drops.removeAll(toRemove);
-    }
-
-    public void manageCollisionWithPerks(){
-        ArrayList<Perk> toRemove = new ArrayList<>();
-        for(Perk perk : gp.perkManager.perks){
-            boolean collidesWithPerk = gp.collisionChecker.checkCollisionBetweenPlayerAndPerk(this,perk);
-            if(collidesWithPerk){
-                switch (perk.type){
-                    case "lifeUp" :
-                        lives += 1;
-                        gp.playSoundFX(1);
-                        break;
-                    case "speedUp" :
-                        if(!isSpeedBoostActive){
-                            lastSpeedBoostTime = System.nanoTime();
-                            isSpeedBoostActive = true;
-                        }
-                        break;
-                    case "armor" :
-                        armor = new Armor(this, "perkArmor");
-                        break;
-                }
-                toRemove.add(perk);
-            }
-        }
-        gp.perkManager.perks.removeAll(toRemove);
-    }
-
     public void manageArmor(){
         double now = System.nanoTime();
         armor.update(this);
-        if(now - armor.activationTime >= 2000000000L && armor.type.equals("spawnArmor")){
+        if(now - armor.activationTime >= spawnArmorDuration && armor.type.equals("spawnArmor")){
             armor.isActive = false;
         }
-        if(now - armor.activationTime >= 7000000000L && armor.type.equals("perkArmor")){
+        if(now - armor.activationTime >= perkArmorDuration && armor.type.equals("perkArmor")){
             armor.isActive = false;
         }
     }
 
     public void manageSpeedBoost(){
         double now = System.nanoTime();
-        if(isSpeedBoostActive && now - lastSpeedBoostTime >= 5000000000L){
+        if(isSpeedBoostActive && now - lastSpeedBoostTime >= speedBoostDuration){
             isSpeedBoostActive = false;
         }
     }

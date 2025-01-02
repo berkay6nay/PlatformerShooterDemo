@@ -1,7 +1,6 @@
 package org.example;
-import org.example.Entity.Bullets.Bullet;
+import org.example.Entity.BaseEntity;
 import org.example.Entity.Drop;
-import org.example.Entity.Perk;
 import org.example.Entity.Player;
 
 public class CollisionChecker {
@@ -79,16 +78,6 @@ public class CollisionChecker {
         return !(gp.tileManager.tile[tileNum1].collision || gp.tileManager.tile[tileNum2].collision);
     }
 
-    public boolean checkCollisionBetweenPlayerAndDrop(Player player , Drop drop){
-        return player.x + player.solidArea.x < drop.x + drop.width && player.x + player.solidArea.x + player.solidArea.width > drop.x
-                && player.y + player.solidArea.y < drop.y + drop.height && player.y + player.solidArea.y + player.solidArea.height > drop.y;
-    }
-
-    public boolean checkCollisionBetweenPlayerAndBullet(Player player , Bullet bullet){
-        return player.x + player.solidArea.x < bullet.x + bullet.width && player.x + player.solidArea.x + player.solidArea.width > bullet.x
-                && player.y + player.solidArea.y < bullet.y + bullet.height && player.y + player.solidArea.y + player.solidArea.height > bullet.y;
-    }
-
     public boolean checkIsInsideBordersWhenAffectedByBullet(Player player){
         return !(player.x + player.gp.tileSize + player.forceCausedByTheImpactWithBullet > player.gp.screenWidth || player.x - player.forceCausedByTheImpactWithBullet < 0);
     }
@@ -97,9 +86,9 @@ public class CollisionChecker {
         return player.y - player.jumpSpeed >= 0;
     }
 
-    public boolean checkCollisionBetweenPlayerAndPerk(Player player , Perk perk){
-        return player.x + player.solidArea.x < perk.x + perk.width && player.x + player.solidArea.x + player.solidArea.width > perk.x
-                && player.y + player.solidArea.y < perk.y + perk.height && player.y + player.solidArea.y + player.solidArea.height > perk.y;
+    public boolean checkCollisionBetweenPlayerAndEntity(Player player , BaseEntity entity){
+        return player.x + player.solidArea.x < entity.x + entity.width && player.x + player.solidArea.x + player.solidArea.width > entity.x
+                && player.y + player.solidArea.y < entity.y + entity.height && player.y + player.solidArea.y + player.solidArea.height > entity.y;
     }
 
 }

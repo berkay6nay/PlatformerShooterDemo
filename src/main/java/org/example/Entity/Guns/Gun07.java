@@ -1,6 +1,5 @@
 package org.example.Entity.Guns;
 import org.example.BulletKeyHandler;
-import org.example.Entity.Bullets.Bullet06;
 import org.example.Entity.Bullets.Bullet07;
 import org.example.Entity.Player;
 import org.example.GamePanel;
@@ -17,7 +16,7 @@ public class Gun07 extends  Gun{
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;
         this.gunHeight = 20;
-        this.defaultBulletNumber = 45;
+        this.defaultBulletNumber = 150; //EQUIVALENT OF A MINIGUN
         this.currentBulletNumber = defaultBulletNumber;
         getGunImages();
     }

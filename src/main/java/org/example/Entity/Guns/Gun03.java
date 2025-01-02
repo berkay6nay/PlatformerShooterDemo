@@ -18,7 +18,7 @@ public class Gun03 extends Gun{
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;
         this.gunHeight = 20;
-        this.defaultBulletNumber = 45;
+        this.defaultBulletNumber = 35;
         this.currentBulletNumber = defaultBulletNumber;
         getGunImages();
     }

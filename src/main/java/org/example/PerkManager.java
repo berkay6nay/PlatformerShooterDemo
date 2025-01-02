@@ -1,8 +1,6 @@
 package org.example;
-
-import org.example.Entity.Drop;
 import org.example.Entity.Perk;
-
+import org.example.Entity.Player;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,6 +21,8 @@ public class PerkManager {
     public double lastPerkTime;
     public ArrayList<String> perkGenerationRowPlaces;
 
+    Double[] probabilitiesList = {0.2,0.6,1.0};
+
     public PerkManager(GamePanel gp){
         this.gp = gp;
         perkTypes = new ArrayList<>();
@@ -42,38 +42,40 @@ public class PerkManager {
 
         if(timePassedSinceLastDropGeneration > 20000000000L && perks.size() <= 2){
             Random random = new Random();
-            String randomType = perkTypes.get(random.nextInt(perkTypes.size()));
+            String randomType = pickRandomPerkFromGunList();
             String randomRowName = perkGenerationRowPlaces.get(random.nextInt(perkGenerationRowPlaces.size()));
 
-            if(randomRowName.equals("leftBottom")){
-                int maxX = 7*gp.tileSize;
-                int minX = 2*gp.tileSize;
-                int randomY = gp.tileSize*9;
-                int randomX = random.nextInt(maxX - minX + 1) + minX;
-                BufferedImage perkImage = getImageForRandomPerkType(randomType);
-                Perk perk = new Perk(gp , randomType,randomX,randomY,perkImage,width,height);
-                perks.add(perk);
-                lastPerkTime = now;
-            }
-            else if(randomRowName.equals("rightBottom")){
-                int maxX = 17*gp.tileSize;
-                int minX = 12*gp.tileSize;
-                int randomY = gp.tileSize*9;
-                int randomX = random.nextInt(maxX - minX + 1) + minX;
-                BufferedImage perkImage = getImageForRandomPerkType(randomType);
-                Perk perk = new Perk(gp , randomType,randomX,randomY,perkImage,width,height);
-                perks.add(perk);
-                lastPerkTime = now;
-            }
-            else if(randomRowName.equals("middle")){
-                int maxX = 12*gp.tileSize;
-                int minX = 7*gp.tileSize;
-                int randomY = gp.tileSize*7;
-                int randomX = random.nextInt(maxX - minX + 1) + minX;
-                BufferedImage perkImage = getImageForRandomPerkType(randomType);
-                Perk perk = new Perk(gp , randomType,randomX,randomY,perkImage,width,height);
-                perks.add(perk);
-                lastPerkTime = now;
+            switch (randomRowName) {
+                case "leftBottom" -> {
+                    int maxX = 6 * gp.tileSize;
+                    int minX = 3 * gp.tileSize;
+                    int randomY = gp.tileSize * 9;
+                    int randomX = random.nextInt(maxX - minX + 1) + minX;
+                    BufferedImage perkImage = getImageForRandomPerkType(randomType);
+                    Perk perk = new Perk(gp, randomType, randomX, randomY, perkImage, width, height);
+                    perks.add(perk);
+                    lastPerkTime = now;
+                }
+                case "rightBottom" -> {
+                    int maxX = 16 * gp.tileSize;
+                    int minX = 12 * gp.tileSize;
+                    int randomY = gp.tileSize * 9;
+                    int randomX = random.nextInt(maxX - minX + 1) + minX;
+                    BufferedImage perkImage = getImageForRandomPerkType(randomType);
+                    Perk perk = new Perk(gp, randomType, randomX, randomY, perkImage, width, height);
+                    perks.add(perk);
+                    lastPerkTime = now;
+                }
+                case "middle" -> {
+                    int maxX = 12 * gp.tileSize;
+                    int minX = 7 * gp.tileSize;
+                    int randomY = gp.tileSize * 7;
+                    int randomX = random.nextInt(maxX - minX + 1) + minX;
+                    BufferedImage perkImage = getImageForRandomPerkType(randomType);
+                    Perk perk = new Perk(gp, randomType, randomX, randomY, perkImage, width, height);
+                    perks.add(perk);
+                    lastPerkTime = now;
+                }
             }
         }
     }
@@ -121,10 +123,12 @@ public class PerkManager {
     }
 
     public BufferedImage getImageForRandomPerkType(String randomType){
-        if(randomType.equals("lifeUp")) return lifeUpImage;
-        if(randomType.equals("speedUp")) return speedUpImage;
-        if(randomType.equals("armor")) return armorImage;
-        return null;
+        return switch (randomType) {
+            case "lifeUp" -> lifeUpImage;
+            case "speedUp" -> speedUpImage;
+            case "armor" -> armorImage;
+            default -> null;
+        };
     }
 
     public void removePerkAfterCertainAmountOfTime(){
@@ -137,5 +141,42 @@ public class PerkManager {
         }
         perks.removeAll(perksToRemove);
     }
+
+    public void managePickingUpPerk(Player player){
+        ArrayList<Perk> toRemove = new ArrayList<>();
+        for(Perk perk : perks){
+            boolean collidesWithPerk = gp.collisionChecker.checkCollisionBetweenPlayerAndEntity(player,perk);
+            if(collidesWithPerk){
+                switch (perk.type){
+                    case "lifeUp" :
+                        player.lives += 1;
+                        gp.playSoundFX(1);
+                        break;
+                    case "speedUp" :
+                        if(!player.isSpeedBoostActive){
+                            player.lastSpeedBoostTime = System.nanoTime();
+                            player.isSpeedBoostActive = true;
+                        }
+                        break;
+                    case "armor" :
+                        player.armor = new Armor(player, "perkArmor");
+                        break;
+                }
+                toRemove.add(perk);
+            }
+        }
+        perks.removeAll(toRemove);
+    }
+
+    public String pickRandomPerkFromGunList(){
+        Random rand = new Random();
+        double prob = rand.nextDouble();
+
+        for(int i = 0 ; i < perkTypes.size() ; ++i){
+            if(probabilitiesList[i] > prob) return perkTypes.get(i);
+        }
+        return null;
+    }
+
 
 }

@@ -4,15 +4,9 @@ import org.example.GamePanel;
 
 import java.awt.image.BufferedImage;
 
-public class Perk {
+public class Perk extends BaseEntity {
 
     public String type;
-    public int x;
-    public int y;
-    public BufferedImage image;
-    public int width;
-    public int height;
-    GamePanel gp;
     public double creationTime;
 
     public Perk(GamePanel gp , String type , int x , int y , BufferedImage image, int width , int height){

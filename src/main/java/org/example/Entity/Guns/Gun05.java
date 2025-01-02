@@ -1,6 +1,5 @@
 package org.example.Entity.Guns;
 import org.example.BulletKeyHandler;
-import org.example.Entity.Bullets.Bullet03;
 import org.example.Entity.Bullets.Bullet05;
 import org.example.Entity.Player;
 import org.example.GamePanel;
@@ -18,8 +17,9 @@ public class Gun05 extends Gun{
         this.gunXDifferenceWhenFacingLeft = gp.tileSize / 4 + 5;
         this.gunYDifference = gp.tileSize/4 + 10;
         this.gunHeight = 20;
-        this.defaultBulletNumber = 45;
+        this.defaultBulletNumber = 3;
         this.currentBulletNumber = defaultBulletNumber;
+        this.shootingInterval = 2000000000;
         getGunImages();
     }
 
@@ -46,7 +46,7 @@ public class Gun05 extends Gun{
     }
 
     public Bullet05 generateBullet(){
-        gp.playSoundFX(5);
+        gp.playSoundFX(0);
         return new Bullet05(this);
     }
 }
